@@ -16,11 +16,8 @@
 	</path>
 
 	<target name="clean" description="Clean up.">
-		<delete>
-			<fileset dir="${BUILDDIR}/net">
-				<include name="**/*.class"/>
-			</fileset>
-		</delete>
+		<delete dir="${BUILDDIR}"/>
+		<delete file="therm.war"/>
 	</target>
 
 	<target name="prepare">
