@@ -4,9 +4,15 @@
 
 package net.spy.temperature;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import net.spy.db.SpyDB;
-import java.sql.*;
-import java.util.*;
 
 public class Sensor extends Object implements java.io.Serializable {
 

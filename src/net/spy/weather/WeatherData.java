@@ -6,7 +6,8 @@
 
 package net.spy.weather;
 
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
 
 public class WeatherData extends Object {
 
@@ -36,7 +37,7 @@ public class WeatherData extends Object {
 	public static final int TIME=0xff;
 
 	// Data types
-	protected static Hashtable types=null;
+	protected static Map types=null;
 
 	/**
 	 * Celsius unit for temperature.
@@ -80,7 +81,7 @@ public class WeatherData extends Object {
 	}
 
 	protected static synchronized void initDataTypes() {
-		types=new Hashtable();
+		types=new HashMap();
 
 		types.put(new Integer(0x8f), "Time and Humidity");
 		types.put(new Integer(0x9f), "Temperature");

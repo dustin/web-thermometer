@@ -6,20 +6,26 @@
 
 package net.spy.temperature;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.MalformedURLException;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.spy.util.SpyConfig;
 import net.spy.util.SpyUtil;
 
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.Image;
+import java.awt.Color;
+import java.awt.Graphics;
 
-import net.spy.png.*;
+import net.spy.png.PngServlet;
+import net.spy.png.StupidImageObserver;
+import net.spy.png.ImageLoader;
 
 // The class
 public class HouseServlet extends PngServlet { 

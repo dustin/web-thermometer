@@ -6,22 +6,33 @@
 
 package net.spy.temperature;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import java.net.URL;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+
+import java.util.Calendar;
+import java.util.Map;
+import java.util.Iterator;
+
 import java.text.SimpleDateFormat;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import net.spy.*;
-import net.spy.net.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Graphics;
 
-import java.awt.*;
-import java.awt.image.*;
-
-import net.spy.cache.*;
-import net.spy.png.*;
+import net.spy.cache.SpyCache;
+import net.spy.png.PngServlet;
+import net.spy.png.StupidImageObserver;
+import net.spy.png.ImageLoader;
 
 import net.spy.cron.Cron;
 import net.spy.cron.JobQueue;

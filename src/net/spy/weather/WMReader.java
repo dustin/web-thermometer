@@ -6,8 +6,9 @@
 
 package net.spy.weather;
 
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * Return WeatherData objects from an InputStream

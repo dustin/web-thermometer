@@ -6,7 +6,7 @@
 
 package net.spy.weather;
 
-import java.text.*;
+import java.text.NumberFormat;
 
 public class RainData extends WeatherData {
 

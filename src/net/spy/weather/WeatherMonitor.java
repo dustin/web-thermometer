@@ -6,8 +6,6 @@
 
 package net.spy.weather;
 
-import java.net.*;
-
 import net.spy.util.LoopingThread;
 
 /**

@@ -4,11 +4,20 @@
 
 package net.spy.temperature;
 
-import net.spy.*;
-import java.sql.*;
-import java.util.*;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import net.spy.temperature.sp.report.*;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+
+import net.spy.temperature.sp.report.ReportQuery;
+import net.spy.temperature.sp.report.Histogram;
+import net.spy.temperature.sp.report.MinHour;
+import net.spy.temperature.sp.report.AvgHour;
+import net.spy.temperature.sp.report.MaxHour;
+import net.spy.temperature.sp.report.Vitality;
 
 /**
  * Bean used for Temperature reports.
