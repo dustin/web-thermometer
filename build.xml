@@ -25,6 +25,7 @@
 	<target name="clean" description="Clean up.">
 		<delete dir="${BUILDDIR}"/>
 		<delete file="therm.war"/>
+		<delete file="thintherm.war"/>
 	</target>
 
 	<target name="prepare">
