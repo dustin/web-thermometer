@@ -15,6 +15,8 @@
 			<include name="spy.jar"/>
 			<include name="jwebkit.jar"/>
 			<include name="pngservlet.jar"/>
+			<include name="spyxmlrpc.jar"/>
+			<include name="xmlrpc-*.jar"/>
 		</fileset>
 		<pathelement path="${CLASSES}"/>
 	</path>
@@ -43,6 +45,9 @@
 				<include name="pngservlet.jar"/>
 				<include name="postgresql.jar"/> <!-- DB queries and stuff -->
 				<include name="acme.jar"/> <!-- needed by pngservlet for gifs -->
+				<!-- XMLRPC stuff -->
+				<include name="spyxmlrpc.jar"/>
+				<include name="xmlrpc-*.jar"/>
 			</lib>
 			<zipfileset dir="webroot" prefix=""/>
 			<!-- Get the therms.properties into place -->

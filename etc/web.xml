@@ -63,6 +63,12 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+	<!-- RPC servlet -->
+	<servlet>
+		<servlet-name>rpc</servlet-name>
+		<servlet-class>net.spy.rpc.XMLRPC</servlet-class>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>Temperature</servlet-name>
 		<url-pattern>/Temperature</url-pattern>
@@ -81,6 +87,11 @@
 	<servlet-mapping>
 		<servlet-name>weather</servlet-name>
 		<url-pattern>/weather</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>rpc</servlet-name>
+		<url-pattern>/RPC2</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>
