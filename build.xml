@@ -19,9 +19,7 @@
 		<pathelement path="${CLASSES}"/>
 	</path>
 
-	<taskdef name="spgen" classname="net.spy.util.SPGenTask">
-		<classpath refid="myclasses"/>
-	</taskdef>
+	<taskdef classpathref="myclasses" resource="net/spy/ant/tasks.properties"/>
 
 	<target name="clean" description="Clean up.">
 		<delete dir="${BUILDDIR}"/>
