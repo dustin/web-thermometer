@@ -23,13 +23,22 @@ import java.awt.image.*;
 import net.spy.cache.*;
 import net.spy.png.*;
 
+import net.spy.cron.Cron;
+import net.spy.cron.JobQueue;
+import net.spy.cron.TimeIncrement;
+
 // The class
 public class Temperature extends PngServlet {
+
+	// Nightly SQL script
+	private static final String NIGHTLY_SQL="net/spy/temperature/nightly.sql";
 
 	// shared gatherer instance
 	static Gatherer gatherer=null;
 
 	private SpyCache cache=null;
+
+	private Cron cron=null;
 
 	// Image stuff.
 	private Image baseImage=null;
@@ -65,6 +74,27 @@ public class Temperature extends PngServlet {
 		black=new Color(0, 0, 0);
 		white=new Color(255, 255, 255);
 		font=new Font("SanSerif", Font.PLAIN, 10);
+
+		// Set up the cron.
+		cron=new Cron(new JobQueue());
+
+		setupJobs();
+	}
+
+	private void setupJobs() {
+		TimeIncrement ti=new TimeIncrement();
+		// Do this every day...
+		ti.setField(Calendar.DAY_OF_MONTH);
+		ti.setIncrement(1);
+		// ...at the same time
+		Calendar cal=Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 2);
+		cal.set(Calendar.MINUTE, 3);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		cron.getJobQueue().addJob(new ScriptRunner("nightly rollup",
+			cal.getTime(), ti, NIGHTLY_SQL));
 	}
 
 	/** 
@@ -73,6 +103,7 @@ public class Temperature extends PngServlet {
 	public void destroy() {
 		log("Shutting down gatherer.");
 		gatherer.stopRunning();
+		cron.shutdown();
 		super.destroy();
 	}
 

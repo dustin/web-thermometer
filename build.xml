@@ -49,6 +49,11 @@
 			<zipfileset dir="etc" prefix="WEB-INF/classes/net/spy/temperature">
 				<include name="therms.properties"/>
 			</zipfileset>
+			<zipfileset dir="${SRCDIR}" prefix="WEB-INF/classes/">
+				<include name="**/*.properties"/>
+				<include name="**/*.txt"/>
+				<include name="**/*.sql"/>
+			</zipfileset>
 		</war>
 	</target>
 
