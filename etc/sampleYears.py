@@ -15,8 +15,8 @@ create table samples_%(year)s (
 	foreign key(sensor_id) references sensors(sensor_id)
 )
 ;
-create index samples_%(year)s_bytime on samples_%(year)s(ts);
-create index samples_%(year)s_byid on samples_%(year)s(sensor_id);
+create unique index samples_%(year)s_bytimeid on samples_%(year)s(ts, sensor_id)
+;
 """
 
 # Build the tables
@@ -38,4 +38,5 @@ create rule sample_rule as on insert to samples
   insert into samples_%s (ts, sensor_id, sample)
     values(new.ts, new.sensor_id, new.sample)
 ;
+grant insert on samples to tempload;
 """ % (sys.argv[-1])
