@@ -51,6 +51,18 @@
 		</war>
 	</target>
 
+	<target name="thinwar" description="Make libless war" depends="all,validate">
+		<war destfile="thintherm.war" webxml="etc/web.xml">
+			<webinf dir="etc/web-inf"/>
+			<classes dir="${CLASSES}"/>
+			<zipfileset dir="webroot" prefix=""/>
+			<!-- Get the therms.properties into place -->
+			<zipfileset dir="etc" prefix="WEB-INF/classes/net/spy/temperature">
+				<include name="therms.properties"/>
+			</zipfileset>
+		</war>
+	</target>
+
 	<target name="validate">
 		<xmlvalidate failonerror="yes">
 			<fileset dir="etc" includes="**/*.xml"/>
