@@ -29,7 +29,7 @@ select
 @results
 serial_num VARCHAR The serial number of the device
 name VARCHAR The name of the device
-day VARCHAR Day for this reading
+day DATE Day for this reading
 min_temp DECIMAL minimum reading for this day
 avg_temp DECIMAL avg reading for this day
 stddev_temp DECIMAL stddev for this day
