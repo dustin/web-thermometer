@@ -146,7 +146,10 @@ public class Gatherer extends SpyThread {
 				getLogger().debug("Got sample for " + key + " " + sample_val);
 			}
 		} catch(MissingResourceException e) {
-			getLogger().warn("Unknown serial number seen:  " + serial, e);
+			// Only log this if we haven't seen it before
+			if(!seen.containsKey(serial)) {
+				getLogger().warn("Unknown serial number seen:  " + serial, e);
+			}
 			key=serial;
 		}
 
