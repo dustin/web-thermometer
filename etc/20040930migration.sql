@@ -144,7 +144,7 @@ commit;
 
 vacuum verbose samples_old;
 
-create index samples_2002_bytime on samples_2002(ts);
+create unique index samples_2002_bytimeid on samples_2002(ts, sensor_id);
 
 begin transaction;
 insert into samples_2001
