@@ -62,11 +62,7 @@ public class Temperature extends PngServlet {
 		super.init(config);
 
 		try {
-			// TODO:  make this configurable
-			InetAddress ia=InetAddress.getByName("225.0.0.37");
-			int port=6789;
-			log("Initializing gatherer on " + ia + ":" + port);
-			gatherer=new Gatherer(ia, port);
+			gatherer=Gatherer.getInstance();
 		} catch(IOException e) {
 			throw new ServletException("Could not initialize the gatherer.",e);
 		}

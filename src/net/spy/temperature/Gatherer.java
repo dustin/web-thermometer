@@ -36,14 +36,18 @@ public class Gatherer extends SpyThread {
 
 	private static final long MAX_AGE=900000;
 
+	private static Gatherer instance=null;
+
 	/**
 	 * Get an instance of Gatherer.
 	 */
-	public Gatherer(InetAddress group, int port) throws IOException {
+	private Gatherer(InetAddress group, int port) throws IOException {
 		super();
 
 		this.group=group;
 		this.port=port;
+
+		getLogger().info("Initializing gatherer on " + group + ":" + port);
 		seen=Collections.synchronizedMap(new TreeMap());
 		// Serial number -> name mapping
 		serials=ResourceBundle.getBundle("net.spy.temperature.therms");
@@ -54,6 +58,18 @@ public class Gatherer extends SpyThread {
 		setName("Temperature Gatherer");
 		setDaemon(true);
 		start();
+	}
+
+	/** 
+	 * Get the singleton Gatherer instance.
+	 */
+	public static synchronized Gatherer getInstance() throws IOException {
+		if(instance == null) {
+			InetAddress ia=InetAddress.getByName("225.0.0.37");
+			int port=6789;
+			instance=new Gatherer(ia, port);
+		}
+		return(instance);
 	}
 
 	/** 
