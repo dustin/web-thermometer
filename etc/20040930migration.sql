@@ -89,6 +89,20 @@ commit;
 
 -- Migration
 
+-- Drop the indexes before proceeding.
+drop index samples_1999_bytime;
+drop index samples_1999_byid;
+drop index samples_2000_bytime;
+drop index samples_2000_byid;
+drop index samples_2001_bytime;
+drop index samples_2001_byid;
+drop index samples_2002_bytime;
+drop index samples_2002_byid;
+drop index samples_2003_bytime;
+drop index samples_2003_byid;
+drop index samples_2004_bytime;
+drop index samples_2004_byid;
+
 begin transaction;
 insert into samples_2004
 	select ts, sensor_id, sample
@@ -98,8 +112,11 @@ insert into samples_2004
 delete from samples_old where ts >= '2004/01/01'::timestamp
 ;
 commit;
+-- Special unique index for inserts.
 
 vacuum verbose samples_old;
+
+create unique index samples_2004_bytimeid on samples_2004(ts, sensor_id);
 
 begin transaction;
 insert into samples_2003
@@ -113,6 +130,8 @@ commit;
 
 vacuum verbose samples_old;
 
+create unique index samples_2003_bytimeid on samples_2003(ts, sensor_id);
+
 begin transaction;
 insert into samples_2002
 	select ts, sensor_id, sample
@@ -124,6 +143,8 @@ delete from samples_old where ts >= '2002/01/01'::timestamp
 commit;
 
 vacuum verbose samples_old;
+
+create index samples_2002_bytime on samples_2002(ts);
 
 begin transaction;
 insert into samples_2001
@@ -137,6 +158,8 @@ commit;
 
 vacuum verbose samples_old;
 
+create unique index samples_2001_bytimeid on samples_2001(ts, sensor_id);
+
 begin transaction;
 insert into samples_2000
 	select ts, sensor_id, sample
@@ -149,6 +172,8 @@ commit;
 
 vacuum verbose samples_old;
 
+create unique index samples_2000_bytimeid on samples_2000(ts, sensor_id);
+
 begin transaction;
 insert into samples_1999
 	select ts, sensor_id, sample
@@ -159,3 +184,6 @@ delete from samples_old where ts >= '1999/01/01'::timestamp
 ;
 commit;
 
+vacuum verbose samples_old;
+
+create unique index samples_1999_bytimeid on samples_1999(ts, sensor_id);
