@@ -85,7 +85,7 @@
 
 	<target name="install" description="Install the stuff" depends="war">
 		<copy file="therm.war"
-			tofile="/afs/.spy.net/misc/web/resin/wars/therm.war"/>
+			tofile="/afs/.spy.net/misc/web/java/wars/therm.war"/>
 	</target>
 
 </project>
