@@ -10,21 +10,17 @@ Get a summary report of the thermometers.
 
 @sql
 select
-		s.serial as serial_num,
-		s.name as name,
-		date(ts) as day,
-		min(sample) as min_temp,
-		avg(sample) as avg_temp,
-		stddev(sample) as stddev_temp,
-		max(sample) as max_temp
+		s.serial as serial_num, s.name,
+		r.day,
+		r.min_reading as min_temp,
+		r.avg_reading as avg_temp,
+		r.stddev_reading as stddev_temp,
+		r.max_reading as max_temp
 	from
-		samples inner join sensors s using (sensor_id)
+		rollups_day r inner join sensors s using (sensor_id)
 	where
-		ts > current_date - 7
-	group by
-		serial_num, name, day
-	order by
-		serial_num, day desc
+		day > current_date - 8
+	order by serial_num, day desc
 
 @results
 serial_num VARCHAR The serial number of the device
