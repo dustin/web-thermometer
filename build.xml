@@ -108,6 +108,9 @@
 			<fileset dir="etc"><include name="web.xml"/></fileset>
 			<fileset dir="etc/web-inf"><include name="**"/></fileset>
 		</copy>
+		<copy todir="${INSTDIR}/WEB-INF/classes/net/spy/temperature">
+			<fileset dir="etc"><include name="therms.properties"/></fileset>
+		</copy>
 	</target>
 
 </project>
