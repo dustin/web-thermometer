@@ -64,15 +64,15 @@ public class WapReport extends JWHttpServlet {
 		sb.append("\"-//WAPFORUM//DTD WML 1.1//EN\" ");
 		sb.append("\"http://www.wapforum.org/DTD/wml_1.1.xml\">\n");
 		sb.append("<wml>\n");
-		sb.append("<card id=\"home\" title=\"Therms\">\n");
+		sb.append("<card id=\"home\" title=\"Therms\">\n<p>\n");
 
 		for(Iterator i=nameMap.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
-			sb.append("<a href=\"#" + me.getKey() + "\">"
+			sb.append("<a href=\"#s" + me.getKey() + "\">"
 				+ me.getValue() + "</a><br/>\n");
 		}
 
-		sb.append("</card>\n");
+		sb.append("</p>\n</card>\n");
 
 		MessageFormat mf=new MessageFormat("min={0,number,#.##} "
 			+ "max={1,number,#.##} "
@@ -81,20 +81,19 @@ public class WapReport extends JWHttpServlet {
 
 		for(Iterator i=stats.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
-			sb.append("<card id=\"" + me.getKey() + "\" title=\""
-				+ nameMap.get(me.getKey()) + "\">\n");
-
+			sb.append("<card id=\"s" + me.getKey() + "\" title=\""
+				+ nameMap.get(me.getKey()) + "\">\n<p>\n");
 
 			for(Iterator i2=((List)me.getValue()).iterator(); i2.hasNext(); ) {
 				Stat s=(Stat)i2.next();
-				sb.append("<p>" + s.day + "<br/>");
+				sb.append("" + s.day + "<br/><br/>\n");
 				Object args[]={new Float(s.min), new Float(s.max),
 					new Float(s.avg), new Float(s.stddev)};
 				sb.append(mf.format(args));
-				sb.append("</p>");
+				sb.append("<br/>\n");
 			}
 
-			sb.append("</card>\n");
+			sb.append("</p></card>\n");
 		}
 
 		sb.append("</wml>\n");
