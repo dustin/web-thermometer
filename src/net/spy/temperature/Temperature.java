@@ -92,6 +92,9 @@ public class Temperature extends PngServlet {
 		cal.set(Calendar.MINUTE, 3);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
+		// Add a day so it happens tomorrow.  This wil cause us to skip a day
+		// if we deploy between midnight and 2:03.  Woo.
+		cal.add(Calendar.DAY_OF_MONTH, 1);
 
 		cron.getJobQueue().addJob(new ScriptRunner("nightly rollup",
 			cal.getTime(), ti, NIGHTLY_SQL));
