@@ -4,6 +4,7 @@ package net.spy.temperature;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -39,7 +40,8 @@ public class WapReport extends JWHttpServlet {
 
 	private String getWml() throws ServletException {
 		Map stats=new HashMap();
-		Map nameMap=new HashMap();
+		TreeMap nameMap=new TreeMap();
+		Map nameMapRev=new HashMap();
 
 		try {
 			SummaryByDay sbd=new SummaryByDay(new TempConf());
@@ -52,7 +54,8 @@ public class WapReport extends JWHttpServlet {
 					stats.put(s.sn, l);
 				}
 				l.add(s);
-				nameMap.put(s.sn, s.name);
+				nameMap.put(s.name, s.sn);
+				nameMapRev.put(s.sn, s.name);
 			}
 			rs.close();
 			sbd.close();
@@ -75,8 +78,8 @@ public class WapReport extends JWHttpServlet {
 
 		for(Iterator i=nameMap.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
-			sb.append("<a href=\"#s" + me.getKey() + "\">"
-				+ me.getValue() + "</a><br/>\n");
+			sb.append("<a href=\"#s" + me.getValue() + "\">"
+				+ me.getKey() + "</a><br/>\n");
 		}
 
 		sb.append("</p>\n</card>\n");
@@ -92,7 +95,7 @@ public class WapReport extends JWHttpServlet {
 		for(Iterator i=stats.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
 			sb.append("<card id=\"s" + me.getKey() + "\" title=\""
-				+ nameMap.get(me.getKey())
+				+ nameMapRev.get(me.getKey())
 				+ "\">\n<p>min/avg/max/stddev<br/>\n");
 
 			for(Iterator i2=((List)me.getValue()).iterator(); i2.hasNext(); ) {
