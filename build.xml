@@ -84,33 +84,9 @@
 		</javac>
 	</target>
 
-	<target name="install" description="Install the stuff" depends="all">
-		<copy todir="${INSTDIR}/WEB-INF/classes/">
-			<fileset dir="${CLASSES}">
-				<include name="**/*.class"/>
-				<include name="**/*.properties"/>
-			</fileset>
-		</copy>
-		<copy todir="${INSTDIR}">
-			<fileset dir="webroot">
-				<include name="**"/>
-			</fileset>
-		</copy>
-		<copy todir="${INSTDIR}/WEB-INF/lib">
-			<fileset dir="${LIBDIR}">
-				<include name="spy.jar"/>
-				<include name="jwebkit.jar"/>
-				<include name="pngservlet.jar"/>
-				<include name="acme.jar"/> <!-- needed by pngservlet for gifs -->
-			</fileset>
-		</copy>
-		<copy todir="${INSTDIR}/WEB-INF/">
-			<fileset dir="etc"><include name="web.xml"/></fileset>
-			<fileset dir="etc/web-inf"><include name="**"/></fileset>
-		</copy>
-		<copy todir="${INSTDIR}/WEB-INF/classes/net/spy/temperature">
-			<fileset dir="etc"><include name="therms.properties"/></fileset>
-		</copy>
+	<target name="install" description="Install the stuff" depends="war">
+		<copy file="therm.war"
+			tofile="/afs/.spy.net/misc/web/resin/wars/therm.war"/>
 	</target>
 
 </project>
