@@ -43,6 +43,7 @@
 				<include name="spy.jar"/>
 				<include name="jwebkit.jar"/>
 				<include name="pngservlet.jar"/>
+				<include name="postgres.jar"/> <!-- DB queries and stuff -->
 				<include name="acme.jar"/> <!-- needed by pngservlet for gifs -->
 			</lib>
 			<zipfileset dir="webroot" prefix=""/>
