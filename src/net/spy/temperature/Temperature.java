@@ -44,6 +44,9 @@ public class Temperature extends PngServlet {
 	// Nightly SQL script
 	private static final String NIGHTLY_SQL="net/spy/temperature/nightly.sql";
 
+	// How long responses should last
+	private static final long RESPONSE_TTL=300000;
+
 	// shared gatherer instance
 	static Gatherer gatherer=null;
 
@@ -122,6 +125,11 @@ public class Temperature extends PngServlet {
 	public void doGet (
 		HttpServletRequest request, HttpServletResponse response
 	) throws ServletException {
+		// Set an expires header so nobody thinks this data is good for very
+		// long.
+		long l=new java.util.Date().getTime();
+		l+=RESPONSE_TTL;
+		response.setDateHeader("Expires", l);
 
 		String which=request.getParameter("temp");
 		String therm=request.getParameter("therm");
@@ -129,10 +137,6 @@ public class Temperature extends PngServlet {
 		if(which==null) {
 			// If there's no which, check for a therm
 			if(therm!=null) {
-				// Make sure the temperature updates keep coming back...
-				long l=new java.util.Date().getTime();
-				l+=300000;
-				response.setDateHeader("Expires", l);
 				// Show the graphical representation of the temperature
 				try {
 					writeImage(request, response, getTherm(therm));
