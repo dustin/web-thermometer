@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+	PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+	"http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+
+<web-app>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<!-- The house servlet -->
+	<servlet>
+		<servlet-name>House</servlet-name>
+		<servlet-class>net.spy.temperature.HouseServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+
+		<init-param>
+			<param-name>baseImage</param-name>
+			<param-value>/images/house.gif</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>houseConfig</param-name>
+			<param-value>/WEB-INF/house.conf</param-value>
+		</init-param>
+
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>House</servlet-name>
+		<url-pattern>/House</url-pattern>
+	</servlet-mapping>
+
+	<!-- The temperature servlet -->
+
+	<servlet>
+		<servlet-name>Temperature</servlet-name>
+		<servlet-class>net.spy.temperature.Temperature</servlet-class>
+		<load-on-startup>1</load-on-startup>
+
+		<init-param>
+			<param-name>baseImage</param-name>
+			<param-value>/images/therm-c.gif</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>temperatureProps</param-name>
+			<param-value>/WEB-INF/temperature.properties</param-value>
+		</init-param>
+
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Temperature</servlet-name>
+		<url-pattern>/Temperature</url-pattern>
+	</servlet-mapping>
+
+</web-app>

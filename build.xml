@@ -4,13 +4,14 @@
 
 	<property name="SRCDIR" value="src"/>
 	<property name="BUILDDIR" value="build"/>
+	<property name="LIBDIR" value="${user.home}/lib/java"/>
 
 	<path id="myclasses">
-		<fileset dir="${user.home}/lib/java">
+		<fileset dir="${LIBDIR}">
 			<include name="jsdk.jar"/>
 			<include name="spy.jar"/>
+			<include name="pngservlet.jar"/>
 		</fileset>
-		<pathelement path="${user.home}/prog/snippets/java/servlet/png"/>
 		<pathelement path="${BUILDDIR}"/>
 	</path>
 
@@ -24,6 +25,18 @@
 
 	<target name="prepare">
 		<mkdir dir="${BUILDDIR}"/>
+	</target>
+
+	<target name="war" description="Make deployable war" depends="all">
+		<war destfile="therm.war" webxml="etc/web.xml">
+			<webinf dir="etc/web-inf"/>
+			<classes dir="${BUILDDIR}"/>
+			<lib dir="${LIBDIR}">
+				<include name="spy.jar"/>
+				<include name="pngservlet.jar"/>
+			</lib>
+			<zipfileset dir="webroot" prefix=""/>
+		</war>
 	</target>
 
 	<target name="all" description="Build everything." depends="prepare">
