@@ -20,7 +20,7 @@ select
 	from
 		samples inner join sensors s using (sensor_id)
 	where
-		ts between current_date - 7 and current_timestamp
+		ts > current_date - 7
 	group by
 		serial_num, name, day
 	order by
