@@ -67,8 +67,9 @@ public class WapReport extends JWHttpServlet {
 		sb.append("<wml>\n");
 		sb.append("<card id=\"home\" title=\"Therms\">\n<p>\n");
 
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss");
-		sb.append(sdf.format(new java.util.Date()) + "<br/>\n");
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd HHmmss");
+		sb.append(sdf.format(new java.util.Date()));
+		sb.append("<br/>\n");
 
 		for(Iterator i=nameMap.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
