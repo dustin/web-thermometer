@@ -187,3 +187,12 @@ commit;
 vacuum verbose samples_old;
 
 create unique index samples_1999_bytimeid on samples_1999(ts, sensor_id);
+
+-- Putting back the time indexes
+create index samples_1999_bytime on samples_1999(ts);
+create index samples_2000_bytime on samples_2000(ts);
+create index samples_2001_bytime on samples_2001(ts);
+create index samples_2002_bytime on samples_2002(ts);
+create index samples_2003_bytime on samples_2003(ts);
+create index samples_2004_bytime on samples_2004(ts);
+
