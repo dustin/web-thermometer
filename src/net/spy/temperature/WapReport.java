@@ -74,21 +74,22 @@ public class WapReport extends JWHttpServlet {
 
 		sb.append("</p>\n</card>\n");
 
-		MessageFormat mf=new MessageFormat("min={0,number,#.##} "
-			+ "max={1,number,#.##} "
-			+ "avg={2,number,#.##} "
-			+ "stddev={3,number,#.##}<br/>");
+		MessageFormat mf=new MessageFormat("{0,number,#.#} "
+			+ "{1,number,#.#} "
+			+ "{2,number,#.#} "
+			+ "{3,number,#.#}<br/>");
 
 		for(Iterator i=stats.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
 			sb.append("<card id=\"s" + me.getKey() + "\" title=\""
-				+ nameMap.get(me.getKey()) + "\">\n<p>\n");
+				+ nameMap.get(me.getKey())
+				+ "\">\n<p>min/avg/max/stddev<br/>\n");
 
 			for(Iterator i2=((List)me.getValue()).iterator(); i2.hasNext(); ) {
 				Stat s=(Stat)i2.next();
-				sb.append("" + s.day + "<br/><br/>\n");
-				Object args[]={new Float(s.min), new Float(s.max),
-					new Float(s.avg), new Float(s.stddev)};
+				sb.append("<b>" + s.day + "</b><br/>\n");
+				Object args[]={new Float(s.min), new Float(s.avg),
+					new Float(s.max), new Float(s.stddev)};
 				sb.append(mf.format(args));
 				sb.append("<br/>\n");
 			}
