@@ -4,16 +4,23 @@
 
 	<property name="SRCDIR" value="src"/>
 	<property name="BUILDDIR" value="build"/>
+	<property name="CLASSES" value="${BUILDDIR}/classes"/>
+	<property name="GENDIR" value="${BUILDDIR}/gen"/>
 	<property name="LIBDIR" value="${user.home}/lib/java"/>
 
 	<path id="myclasses">
 		<fileset dir="${LIBDIR}">
 			<include name="jsdk.jar"/>
 			<include name="spy.jar"/>
+			<include name="jwebkit.jar"/>
 			<include name="pngservlet.jar"/>
 		</fileset>
-		<pathelement path="${BUILDDIR}"/>
+		<pathelement path="${CLASSES}"/>
 	</path>
+
+	<taskdef name="spgen" classname="net.spy.util.SPGenTask">
+		<classpath refid="myclasses"/>
+	</taskdef>
 
 	<target name="clean" description="Clean up.">
 		<delete dir="${BUILDDIR}"/>
@@ -22,14 +29,17 @@
 
 	<target name="prepare">
 		<mkdir dir="${BUILDDIR}"/>
+		<mkdir dir="${GENDIR}"/>
+		<mkdir dir="${CLASSES}"/>
 	</target>
 
-	<target name="war" description="Make deployable war" depends="all">
+	<target name="war" description="Make deployable war" depends="all,validate">
 		<war destfile="therm.war" webxml="etc/web.xml">
 			<webinf dir="etc/web-inf"/>
-			<classes dir="${BUILDDIR}"/>
+			<classes dir="${CLASSES}"/>
 			<lib dir="${LIBDIR}">
 				<include name="spy.jar"/>
+				<include name="jwebkit.jar"/>
 				<include name="pngservlet.jar"/>
 			</lib>
 			<zipfileset dir="webroot" prefix=""/>
@@ -40,21 +50,29 @@
 		</war>
 	</target>
 
-	<target name="all" description="Build everything." depends="prepare">
-		<javac
-			srcdir="${SRCDIR}"
-			destdir="${BUILDDIR}"
-			deprecation="on"
-			debug="on">
+	<target name="validate">
+		<xmlvalidate failonerror="yes">
+			<fileset dir="etc" includes="**/*.xml"/>
+		</xmlvalidate>
+	</target>
+
+	<target name="spgen">
+		<spgen srcdir="${SRCDIR}" destdir="${GENDIR}"/>
+	</target>
+
+	<target name="all" description="Build everything." depends="prepare,spgen">
+		<javac srcdir="${GENDIR}" destdir="${CLASSES}" deprecation="on" debug="on">
 			<classpath refid="myclasses"/>
-			<include name="**/*.java"/>
+		</javac>
+		<javac srcdir="${SRCDIR}" destdir="${CLASSES}" deprecation="on" debug="on">
+			<classpath refid="myclasses"/>
 		</javac>
 	</target>
 
 	<target name="install" description="Install the servlet" depends="all">
 		<copy
 			todir="/afs/.spy.net/misc/web/root/therm/WEB-INF/classes/">
-			<fileset dir="${BUILDDIR}">
+			<fileset dir="${CLASSES}">
 				<include name="net/**/*.class"/>
 				<include name="net/**/*.properties"/>
 			</fileset>

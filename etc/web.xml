@@ -6,15 +6,10 @@
 
 <web-app>
 
-	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-	</welcome-file-list>
-
 	<!-- The house servlet -->
 	<servlet>
 		<servlet-name>House</servlet-name>
 		<servlet-class>net.spy.temperature.HouseServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
 
 		<init-param>
 			<param-name>baseImage</param-name>
@@ -26,19 +21,22 @@
 			<param-value>/WEB-INF/house.conf</param-value>
 		</init-param>
 
+		<load-on-startup>1</load-on-startup>
+
 	</servlet>
 
-	<servlet-mapping>
-		<servlet-name>House</servlet-name>
-		<url-pattern>/House</url-pattern>
-	</servlet-mapping>
+	<!-- The WAP report servlet -->
+
+	<servlet>
+		<servlet-name>WapReport</servlet-name>
+		<servlet-class>net.spy.temperature.WapReport</servlet-class>
+	</servlet>
 
 	<!-- The temperature servlet -->
 
 	<servlet>
 		<servlet-name>Temperature</servlet-name>
 		<servlet-class>net.spy.temperature.Temperature</servlet-class>
-		<load-on-startup>1</load-on-startup>
 
 		<init-param>
 			<param-name>baseImage</param-name>
@@ -50,11 +48,27 @@
 			<param-value>/WEB-INF/temperature.properties</param-value>
 		</init-param>
 
+		<load-on-startup>1</load-on-startup>
+
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>Temperature</servlet-name>
 		<url-pattern>/Temperature</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>House</servlet-name>
+		<url-pattern>/House</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>WapReport</servlet-name>
+		<url-pattern>/WapReport</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
 
 </web-app>

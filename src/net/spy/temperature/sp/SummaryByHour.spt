@@ -1,0 +1,36 @@
+#
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.temperature.sp
+
+@description
+Get a summary report of the thermometers.
+
+@sql
+select
+		s.serial as serial_num,
+		s.name as name,
+		date_part('hour',ts) as hour,
+		min(sample) as min_temp,
+		avg(sample) as avg_temp,
+		stddev(sample) as stddev_temp,
+		max(sample) as max_temp
+	from
+		samples inner join sensors s using (sensor_id)
+	where
+		ts between current_date - 7 and current_timestamp
+	group by
+		serial_num, name, hour
+	order by
+		serial_num, hour desc
+
+@results
+serial_num VARCHAR The serial number of the device
+name VARCHAR The name of the device
+hour VARCHAR Hour for this reading
+min_temp DECIMAL minimum reading for this hour
+avg_temp DECIMAL avg reading for this hour
+stddev_temp DECIMAL stddev for this hour
+max_temp DECIMAL maximum reading for this hour
