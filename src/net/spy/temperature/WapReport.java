@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Date;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -67,6 +68,7 @@ public class WapReport extends JWHttpServlet {
 		sb.append("<wml>\n");
 		sb.append("<card id=\"home\" title=\"Therms\">\n<p>\n");
 
+		// Timestamp for the overall deck
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd HHmmss");
 		sb.append(sdf.format(new java.util.Date()));
 		sb.append("<br/>\n");
@@ -79,10 +81,13 @@ public class WapReport extends JWHttpServlet {
 
 		sb.append("</p>\n</card>\n");
 
-		MessageFormat mf=new MessageFormat("{0,number,#.#} "
+		// Format to display each stat record
+		MessageFormat mf=new MessageFormat(
+			"<b>{0,date,EEE, MMM dd}</b><br/>\n"
 			+ "{1,number,#.#} "
 			+ "{2,number,#.#} "
-			+ "{3,number,#.#}<br/>");
+			+ "{3,number,#.#} "
+			+ "{4,number,#.#}<br/>");
 
 		for(Iterator i=stats.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
@@ -92,8 +97,8 @@ public class WapReport extends JWHttpServlet {
 
 			for(Iterator i2=((List)me.getValue()).iterator(); i2.hasNext(); ) {
 				Stat s=(Stat)i2.next();
-				sb.append("<b>" + s.day + "</b><br/>\n");
-				Object args[]={new Float(s.min), new Float(s.avg),
+				Object args[]={s.day,
+					new Float(s.min), new Float(s.avg),
 					new Float(s.max), new Float(s.stddev)};
 				sb.append(mf.format(args));
 				sb.append("<br/>\n");
@@ -119,7 +124,7 @@ public class WapReport extends JWHttpServlet {
 	private static class Stat extends Object {
 		public String sn=null;
 		public String name=null;
-		public String day=null;
+		public Date day=null;
 		public float min=0.0f;
 		public float avg=0.0f;
 		public float stddev=0.0f;
@@ -129,7 +134,7 @@ public class WapReport extends JWHttpServlet {
 			super();
 			sn=rs.getString("serial_num");
 			name=rs.getString("name");
-			day=rs.getString("day");
+			day=rs.getDate("day");
 			min=rs.getFloat("min_temp");
 			avg=rs.getFloat("avg_temp");
 			stddev=rs.getFloat("stddev_temp");
