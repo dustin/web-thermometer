@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,6 +66,9 @@ public class WapReport extends JWHttpServlet {
 		sb.append("\"http://www.wapforum.org/DTD/wml_1.1.xml\">\n");
 		sb.append("<wml>\n");
 		sb.append("<card id=\"home\" title=\"Therms\">\n<p>\n");
+
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss");
+		sb.append(sdf.format(new java.util.Date()) + "<br/>\n");
 
 		for(Iterator i=nameMap.entrySet().iterator(); i.hasNext(); ) {
 			Map.Entry me=(Map.Entry)i.next();
