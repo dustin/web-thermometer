@@ -72,7 +72,7 @@ insert into rollups_day
   from
     samples
   where
-  	ts > (select max(day) from rollups_day)
+  	ts >= (select max(day)+1 from rollups_day)
 	and ts < current_date
   group by
   	sensor_id, day
