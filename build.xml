@@ -2,17 +2,17 @@
 
 <project name="TemperatureServlet" default="all" basedir=".">
 
+	<property name="SRCDIR" value="src"/>
+	<property name="BUILDDIR" value="build"/>
+
 	<path id="myclasses">
 		<fileset dir="${user.home}/lib/java">
 			<include name="jsdk.jar"/>
 			<include name="spy.jar"/>
 		</fileset>
-		<pathelement path="${user.home}/prog/eprojects/snippets/java/servlet/png"/>
-		<pathelement path="."/>
+		<pathelement path="${user.home}/prog/snippets/java/servlet/png"/>
+		<pathelement path="${BUILDDIR}"/>
 	</path>
-
-	<property name="SRCDIR" value="."/>
-	<property name="BUILDDIR" value="."/>
 
 	<target name="clean" description="Clean up.">
 		<delete>
@@ -22,14 +22,18 @@
 		</delete>
 	</target>
 
-	<target name="all" description="Build everything.">
+	<target name="prepare">
+		<mkdir dir="${BUILDDIR}"/>
+	</target>
+
+	<target name="all" description="Build everything." depends="prepare">
 		<javac
 			srcdir="${SRCDIR}"
 			destdir="${BUILDDIR}"
 			deprecation="on"
 			debug="on">
 			<classpath refid="myclasses"/>
-			<include name="net/spy/**/*.java"/>
+			<include name="**/*.java"/>
 		</javac>
 	</target>
 
