@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.MissingResourceException;
@@ -44,7 +44,7 @@ public class Gatherer extends SpyThread {
 
 		this.group=group;
 		this.port=port;
-		seen=Collections.synchronizedMap(new HashMap());
+		seen=Collections.synchronizedMap(new TreeMap());
 		// Serial number -> name mapping
 		serials=ResourceBundle.getBundle("net.spy.temperature.therms");
 
