@@ -49,6 +49,7 @@ public class ScriptRunner extends Job {
 	 */
 	public void runJob() {
 		try {
+			getLogger().info("Running nightly script.");
 			SpyDB db=new SpyDB(conf);
 			Connection conn=db.getConn();
 			SQLRunner sr=new SQLRunner(conn);

@@ -96,6 +96,7 @@ public class Temperature extends PngServlet {
 		// if we deploy between midnight and 2:03.  Woo.
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 
+		log("Queueing nightly job starting at " + cal.getTime());
 		cron.getJobQueue().addJob(new ScriptRunner("nightly rollup",
 			cal.getTime(), ti, NIGHTLY_SQL));
 	}
