@@ -11,10 +11,10 @@ import java.util.Date;
 import java.sql.SQLException;
 import java.sql.Connection;
 
-import net.spy.SpyDB;
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 import net.spy.cron.Job;
 import net.spy.cron.TimeIncrement;
+import net.spy.db.SpyDB;
 import net.spy.db.SQLRunner;
 
 /**

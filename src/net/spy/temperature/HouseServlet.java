@@ -13,8 +13,8 @@ import java.net.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import net.spy.*;
-import net.spy.net.*;
+import net.spy.util.SpyConfig;
+import net.spy.util.SpyUtil;
 
 import java.awt.*;
 import java.awt.image.*;

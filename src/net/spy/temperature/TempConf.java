@@ -4,7 +4,7 @@ package net.spy.temperature;
 
 import java.io.File;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 public class TempConf extends SpyConfig {
 

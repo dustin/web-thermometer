@@ -4,7 +4,7 @@
 
 package net.spy.temperature;
 
-import net.spy.*;
+import net.spy.db.SpyDB;
 import java.sql.*;
 import java.util.*;
 
