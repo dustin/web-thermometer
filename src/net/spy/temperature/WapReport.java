@@ -31,9 +31,6 @@ import net.spy.temperature.sp.SummaryByDay;
  */
 public class WapReport extends JWHttpServlet {
 
-	// Response report should be valid for about twelve hours.
-	private static final long RESPONSE_TTL=12*3600*1000;
-
 	/**
 	 * Get an instance of WapReport.
 	 */
@@ -122,12 +119,6 @@ public class WapReport extends JWHttpServlet {
 	 */
 	protected void doGetOrPost(HttpServletRequest req,
 		HttpServletResponse res) throws ServletException, IOException {
-
-		// Set an expires header so nobody thinks this data is good for very
-		// long.
-		long l=new java.util.Date().getTime();
-		l+=RESPONSE_TTL;
-		res.setDateHeader("Expires", l);
 
 		res.setContentType("text/vnd.wap.wml");
 		sendSimple(getWml(), res);
