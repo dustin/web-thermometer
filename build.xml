@@ -69,13 +69,21 @@
 		</javac>
 	</target>
 
-	<target name="install" description="Install the servlet" depends="all">
-		<copy
-			todir="/afs/.spy.net/misc/web/root/therm/WEB-INF/classes/">
+	<target name="install" description="Install the stuff" depends="all">
+		<copy todir="/afs/.spy.net/misc/web/root/therm/WEB-INF/classes/">
 			<fileset dir="${CLASSES}">
-				<include name="net/**/*.class"/>
-				<include name="net/**/*.properties"/>
+				<include name="**/*.class"/>
+				<include name="**/*.properties"/>
 			</fileset>
+		</copy>
+		<copy todir="/afs/.spy.net/misc/web/root/therm/">
+			<fileset dir="webroot">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<copy todir="/afs/.spy.net/misc/web/root/therm/WEB-INF/">
+			<fileset dir="etc"><include name="web.xml"/></fileset>
+			<fileset dir="etc/web-inf"><include name="**"/></fileset>
 		</copy>
 	</target>
 
