@@ -28,7 +28,7 @@ v="create view samples as\n"
 parts=[]
 for i in sys.argv[1:]:
     parts.append("\tselect * from samples_%s\n" % i)
-v = v + " union ".join(parts) + ";"
+v = v + " union all ".join(parts) + ";"
 print v
 
 print "grant select on samples to nobody;"
