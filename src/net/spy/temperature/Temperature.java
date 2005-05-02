@@ -151,6 +151,10 @@ public class Temperature extends PngServlet {
 					out=getWML();
 					log("Sending wml response (" + encodings + ")");
 					send_response(response, out, "text/vnd.wap.wml");
+				} else if(request.getParameter("xml") != null) {
+					out=getXML();
+					log("Sending xml response");
+					send_response(response, out, "text/xml");
 				} else {
 					log("Sending plain response (" + encodings + ")");
 					// No WML support, do the HTML things.
@@ -218,6 +222,26 @@ public class Temperature extends PngServlet {
 		sb.append("</p>\n");
 		sb.append("</card>\n");
 		sb.append("</wml>");
+
+		return(sb.toString());
+	}
+
+	private String getXML() {
+		StringBuffer sb=new StringBuffer(64);
+
+		sb.append("<?xml version=\"1.0\"?>\n");
+		sb.append("<therms>\n");
+		// Add the contents
+		for(Iterator i=gatherer.getSeen().entrySet().iterator(); i.hasNext();) {
+			Map.Entry me=(Map.Entry)i.next();
+			sb.append("<therm id=\"");
+			sb.append(me.getKey());
+			sb.append("\">");
+			Sample s=(Sample)me.getValue();
+			sb.append(s.getSample());
+			sb.append("</therm>\n");
+		}
+		sb.append("</therms>");
 
 		return(sb.toString());
 	}
