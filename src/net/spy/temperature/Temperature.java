@@ -118,6 +118,13 @@ public class Temperature extends PngServlet {
 		super.destroy();
 	}
 
+	private boolean hasOption(HttpServletRequest request, String op) {
+		String pathInfo = request.getPathInfo();
+		boolean rv=request.getParameter(op) != null
+			|| (pathInfo != null && pathInfo.indexOf(op) >= 0);
+		return(rv);
+	}
+
 	// Do a GET request
 	public void doGet (
 		HttpServletRequest request, HttpServletResponse response
@@ -143,7 +150,7 @@ public class Temperature extends PngServlet {
 				String encodings=request.getHeader("Accept");
 				// If the wml parameter is given, or we figure out the
 				// browser supports it
-				if( (request.getParameter("wml")!=null) || 
+				if( hasOption(request, "wml") || 
 					(encodings!=null && encodings.indexOf("text/vnd.wap.wml")>0)
 					) {
 
@@ -151,7 +158,7 @@ public class Temperature extends PngServlet {
 					out=getWML();
 					log("Sending wml response (" + encodings + ")");
 					send_response(response, out, "text/vnd.wap.wml");
-				} else if(request.getParameter("xml") != null) {
+				} else if(hasOption(request, "xml")) {
 					out=getXML();
 					log("Sending xml response");
 					send_response(response, out, "text/xml");

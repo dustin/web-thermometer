@@ -113,6 +113,11 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
+		<servlet-name>Temperature</servlet-name>
+		<url-pattern>/Temperature/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
 		<servlet-name>House</servlet-name>
 		<url-pattern>/House</url-pattern>
 	</servlet-mapping>
