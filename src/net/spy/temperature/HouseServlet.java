@@ -83,7 +83,8 @@ public class HouseServlet extends PngServlet {
 		}
 	}
 
-	private Color getFillColor(SpyConfig conf, String name, double reading) {
+	private Color getFillColor(SpyConfig conf, String name, double reading,
+		float relevance) {
 		Color rv=null;
 
 		int min=conf.getInt(name + ".min", 0);
@@ -106,7 +107,8 @@ public class HouseServlet extends PngServlet {
 				baseColor.getGreen(), baseColor.getBlue(), null);
 			// Brightness should range from 90-100
 			float brightness=0.9f + (distancePercent/10.0f);
-			rv=Color.getHSBColor(parts[0], distancePercent, brightness);
+			rv=Color.getHSBColor(parts[0], relevance*distancePercent,
+				brightness);
 			/*
 			log("Reading for " + name + " " + reading
 				+ " " + min + " - " + max
@@ -117,6 +119,52 @@ public class HouseServlet extends PngServlet {
 			*/
 		}
 		return(rv);
+	}
+
+	private void drawPoint(Graphics g, int x, int y, Color c) {
+		g.setColor(c);
+		g.fillRect(x, y, 1, 1);
+	}
+
+	private void fillGradient(SpyConfig conf, String which, Graphics g,
+		double reading, int x, int y, int w, int h) {
+
+		// Look in the following locations:
+		//  1) which.maxRelevantDistance
+		//  2) maxRelevantDistance
+		//  3) default to 60
+		double maxRelevantDistance = (double)conf.getInt(
+			which + ".maxRelevantDistance",
+			conf.getInt("maxRelevantDistance", 60));
+
+		// Get the thermometer x and y (defaulting to the center)
+		int tx=conf.getInt(which + ".therm.x", x+(w/2));
+		int ty=conf.getInt(which + ".therm.y", y+(h/2));
+
+		for(int i=0; i<w; i++) {
+			for(int j=0; j<h; j++) {
+				// i,j is the point offset within the rect
+				// px,py is the absolute point within the diagram
+				int px=x+i;
+				int py=y+j;
+				double xd = (double)(px-tx);
+				double yd = (double)(py-ty);
+				double distance=Math.sqrt(xd*xd + yd*yd);
+
+				// The relevance of the thermometer on this pixel is inversely
+				// proportional to the percentage of the distance from the
+				// thermometer 
+				double relevance=1d-(distance / maxRelevantDistance);
+				if(relevance < 0) {
+					relevance = 0;
+				}
+
+				// Transform the color
+				Color theColor=getFillColor(conf, which, reading,
+					(float)relevance);
+				drawPoint(g, px, py, theColor);
+			}
+		}
 	}
 
 	// Graphical representation of the image.
@@ -158,11 +206,7 @@ public class HouseServlet extends PngServlet {
 				g.setColor(Color.WHITE);
 
 				// Set the color based on the temperature reading.
-				Color fillColor=getFillColor(conf, things[i], reading);
-				g.setColor(fillColor);
-
-				// Stick the color all up in there.
-				g.fillRect(x, y, w, h);
+				fillGradient(conf, things[i], g, reading, x, y, w, h);
 			} catch(Exception e) {
 				e.printStackTrace();
 				rstring="??.??";
