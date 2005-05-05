@@ -30,12 +30,6 @@ import net.spy.png.ImageLoader;
 // The class
 public class HouseServlet extends PngServlet { 
 
-	// Colors we'll be using
-	private Color white=null;
-	private Color red=null;
-	private Color blue=null;
-	private Color black=null;
-
 	// The base house image.
 	private Image baseImage=null;
 	private boolean imageLoaded=false;
@@ -75,11 +69,6 @@ public class HouseServlet extends PngServlet {
 		} catch(IOException e) {
 			throw new ServletException("Error getting image", e);
 		}
-
-		white=new Color(255, 255, 255);
-		red=new Color(255, 0, 0);
-		blue=new Color(0, 0, 255);
-		black=new Color(0, 0, 0);
 	}
 
 	// Do a GET request
@@ -92,6 +81,42 @@ public class HouseServlet extends PngServlet {
 			e.printStackTrace();
 			throw new ServletException("Error getting image", e);
 		}
+	}
+
+	private Color getFillColor(SpyConfig conf, String name, double reading) {
+		Color rv=null;
+
+		int min=conf.getInt(name + ".min", 0);
+		int max=conf.getInt(name + ".max", 100);
+		double normal=((double)min) + (((double)(max-min)) / 2.0);
+		double maxDistance = (double)(max - min);
+
+		if(reading < min) {
+			rv=Color.BLUE;
+		} else if(reading > max) {
+			rv=Color.RED;
+		} else {
+			// Dynamically calculate a color.
+			Color baseColor=(reading > normal ? Color.RED : Color.BLUE);
+			double distance=Math.abs(reading - normal);
+			float distancePercent=(float)(distance / maxDistance);
+
+			// Figure out the HSB of the base color
+			float parts[]=Color.RGBtoHSB(baseColor.getRed(),
+				baseColor.getGreen(), baseColor.getBlue(), null);
+			// Brightness should range from 90-100
+			float brightness=0.9f + (distancePercent/10.0f);
+			rv=Color.getHSBColor(parts[0], distancePercent, brightness);
+			/*
+			log("Reading for " + name + " " + reading
+				+ " " + min + " - " + max
+				+ " normal: " + normal
+				+ " distance: " + distance + " percent:  " + distancePercent
+				+ " colorHSB(" + parts[0] + ","
+				+ distancePercent + "," + parts[1] + ")");
+			*/
+		}
+		return(rv);
 	}
 
 	// Graphical representation of the image.
@@ -120,7 +145,7 @@ public class HouseServlet extends PngServlet {
 			w=conf.getInt(things[i] + ".rect.w", 0);
 			h=conf.getInt(things[i] + ".rect.h", 0);
 			// Default color is white
-			g.setColor(white);
+			g.setColor(Color.WHITE);
 
 			try {
 				Double dreading=Temperature.gatherer.getSeen(things[i]);
@@ -128,16 +153,13 @@ public class HouseServlet extends PngServlet {
 				rstring="" + reading;
 
 				// Draw a black border
-				g.setColor(black);
+				g.setColor(Color.BLACK);
 				g.fillRect(x-1, y-1, w+2, h+2);
-				g.setColor(white);
+				g.setColor(Color.WHITE);
 
 				// Set the color based on the temperature reading.
-				if(reading< conf.getInt(things[i] + ".min", 0)) {
-					g.setColor(blue);
-				} else if(reading> conf.getInt(things[i] + ".max", 0)) {
-					g.setColor(red);
-				}
+				Color fillColor=getFillColor(conf, things[i], reading);
+				g.setColor(fillColor);
 
 				// Stick the color all up in there.
 				g.fillRect(x, y, w, h);
@@ -146,7 +168,7 @@ public class HouseServlet extends PngServlet {
 				rstring="??.??";
 			}
 			// Put the reading in there.
-			g.setColor(black);
+			g.setColor(Color.BLACK);
 			int stringx=conf.getInt(things[i] + ".reading.x", (x+(w/2)-18));
 			int stringy=conf.getInt(things[i] + ".reading.y", (y+(h/2)+4));
 			g.drawString(rstring, stringx, stringy);
