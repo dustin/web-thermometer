@@ -109,14 +109,6 @@ public class HouseServlet extends PngServlet {
 			float brightness=0.9f + (distancePercent/10.0f);
 			rv=Color.getHSBColor(parts[0], relevance*distancePercent,
 				brightness);
-			/*
-			log("Reading for " + name + " " + reading
-				+ " " + min + " - " + max
-				+ " normal: " + normal
-				+ " distance: " + distance + " percent:  " + distancePercent
-				+ " colorHSB(" + parts[0] + ","
-				+ distancePercent + "," + parts[1] + ")");
-			*/
 		}
 		return(rv);
 	}
@@ -152,8 +144,7 @@ public class HouseServlet extends PngServlet {
 				double distance=Math.sqrt(xd*xd + yd*yd);
 
 				// The relevance of the thermometer on this pixel is inversely
-				// proportional to the percentage of the distance from the
-				// thermometer 
+				// proportional to the distance from the thermometer 
 				double relevance=1d-(distance / maxRelevantDistance);
 				if(relevance < 0) {
 					relevance = 0;
