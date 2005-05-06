@@ -105,8 +105,14 @@ public class HouseServlet extends PngServlet {
 			// Figure out the HSB of the base color
 			float parts[]=Color.RGBtoHSB(baseColor.getRed(),
 				baseColor.getGreen(), baseColor.getBlue(), null);
-			// Brightness should range from 90-100
-			float brightness=0.9f + (distancePercent/10.0f);
+			// Brightness should range from 90-100 depending on the distance
+			// from the normal temperature and the distance from the
+			// thermometer.
+			// As you get further from normal *or* further from thermometer,
+			// the color should become brighter.
+			float brightness=0.9f + Math.max(
+				(distancePercent/10.0f),
+				((1.0f-relevance)/10.0f));
 			rv=Color.getHSBColor(parts[0], relevance*distancePercent,
 				brightness);
 		}
