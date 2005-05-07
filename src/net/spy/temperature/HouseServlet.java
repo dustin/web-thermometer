@@ -42,10 +42,7 @@ public class HouseServlet extends PngServlet {
 		super.init(config);
 
 		// Find the house config
-		houseConfig=config.getInitParameter("houseConfig");
-		if(houseConfig.startsWith("/WEB-INF")) {
-			houseConfig=getServletContext().getRealPath(houseConfig);
-		}
+		houseConfig=getContextRelativeFilePath("houseConfig");
 		log("Using the following config file:  " + houseConfig);
 
 		String bi=config.getInitParameter("baseImage");
@@ -72,7 +69,7 @@ public class HouseServlet extends PngServlet {
 	}
 
 	// Do a GET request
-	public void doGet (
+	public void doGetOrPost (
 		HttpServletRequest request, HttpServletResponse response
 	) throws ServletException, IOException {
 		try {

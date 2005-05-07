@@ -126,9 +126,9 @@ public class Temperature extends PngServlet {
 	}
 
 	// Do a GET request
-	public void doGet (
+	public void doGetOrPost (
 		HttpServletRequest request, HttpServletResponse response
-	) throws ServletException {
+	) throws ServletException, IOException {
 
 		String which=request.getParameter("temp");
 		String therm=request.getParameter("therm");
@@ -140,7 +140,7 @@ public class Temperature extends PngServlet {
 				try {
 					writeImage(request, response, getTherm(therm));
 				} catch(Exception e) {
-					throw new ServletException("Error sending gif", e);
+					throw new ServletException("Error sending image", e);
 				}
 			} else {
 				// If there's no therm, and no out, list the temps
@@ -157,27 +157,27 @@ public class Temperature extends PngServlet {
 					// WML support, let's do the WML page.
 					out=getWML();
 					log("Sending wml response (" + encodings + ")");
-					send_response(response, out, "text/vnd.wap.wml");
+					sendResponse(out, "text/vnd.wap.wml", response);
 				} else if(hasOption(request, "xml")) {
 					out=getXML();
 					log("Sending xml response");
-					send_response(response, out, "text/xml");
+					sendResponse(out, "text/xml", response);
 				} else {
 					log("Sending plain response (" + encodings + ")");
 					// No WML support, do the HTML things.
 					if(request.getParameter("readings") != null) {
 						out=listReadings();
-						send_response(response, out);
+						sendPlain(out, response);
 					} else {
 						out=listTemps();
-						send_response(response, out);
+						sendPlain(out, response);
 					}
 				}
 			}
 		} else {
 			// Show the non-graphical representation of the temperature
 			out=getTemp(which);
-			send_response(response, out);
+			sendPlain(out, response);
 		}
 	}
 
@@ -266,21 +266,10 @@ public class Temperature extends PngServlet {
 		return("" + t);
 	}
 
-	private void send_response(HttpServletResponse response, String o,
-		String type) {
-
-		try {
-			response.setContentType(type);
-			PrintWriter out=response.getWriter();
-			out.print(o);
-			out.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void send_response(HttpServletResponse response, String o) {
-		send_response(response, o, "text/plain");
+	private void sendResponse(String o, String type, HttpServletResponse res)
+		throws IOException {
+		res.setContentType(type);
+		sendSimple(o, res);
 	}
 
 	// Graphical representation of the image.
