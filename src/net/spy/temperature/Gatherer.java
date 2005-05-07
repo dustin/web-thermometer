@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.List;
+import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -25,18 +27,25 @@ import net.spy.SpyThread;
  */
 public class Gatherer extends SpyThread {
 
+	// Maximum number of milliseconds we'll keep a record that hasn't been
+	// updated
+	private static final long MAX_AGE=900000;
+	// Maximum number of historical records we'll keep
+	private static final int MAX_HISTORY=120;
+
+	private static Gatherer instance=null;
+
 	private MulticastSocket s=null;
 	private InetAddress group=null;
 	private int port=-1;
 	private boolean running=true;
 
 	private int updates=0;
+	// The map of names to current samples
 	private Map seen=null;
+	// To hold historical samples
+	private Map history=null;
 	private ResourceBundle serials=null;
-
-	private static final long MAX_AGE=900000;
-
-	private static Gatherer instance=null;
 
 	/**
 	 * Get an instance of Gatherer.
@@ -136,6 +145,21 @@ public class Gatherer extends SpyThread {
 		return(rv);
 	}
 
+	/** 
+	 * Get the recent history of readings for the given thermometer.
+	 * 
+	 * @param name the name of the thermometer
+	 * @return an unmodifiable List of Sample objects
+	 */
+	public List getHistory(String name) {
+		List rv=Collections.EMPTY_LIST;
+		List hist=(List)history.get(name);
+		if(hist != null) {
+			rv=Collections.unmodifiableList(hist);
+		}
+		return(rv);
+	}
+
 	private void process(DatagramPacket recv) throws IOException {
 		byte data[]=recv.getData();
 		byte tmp[]=new byte[recv.getLength()];
@@ -173,11 +197,21 @@ public class Gatherer extends SpyThread {
 		Sample sample=(Sample)seen.get(key);
 		if(sample==null) {
 			sample=new Sample(key);
+			seen.put(key, sample);
 		}
 		sample.setSample(sample_val);
 
-		// Store it
-		seen.put(key, sample);
+		// Also store the history
+		LinkedList readingHistory=(LinkedList)history.get(key);
+		if(readingHistory == null) {
+			readingHistory=new LinkedList();
+			history.put(key, readingHistory);
+		}
+		Sample tmps=new Sample(key);
+		readingHistory.addFirst(tmps);
+		if(readingHistory.size() > MAX_HISTORY) {
+			readingHistory.removeLast();
+		}
 
 		updates++;
 	}
@@ -191,6 +225,8 @@ public class Gatherer extends SpyThread {
 			if(s.age() > MAX_AGE) {
 				getLogger().warn("Removing old entry:  " + s);
 				i.remove();
+				// Remove the history of this one, too.
+				history.remove(me.getKey());
 			}
 		}
 	}
