@@ -17,12 +17,25 @@ public class Sample extends Object {
 	/** 
 	 * Get a new sample with the given name.
 	 * 
-	 * @param name 
+	 * @param name the name of this sample
 	 */
 	public Sample(String name) {
 		super();
 		this.name=name;
 		birthday=System.currentTimeMillis();
+	}
+
+	/** 
+	 * Get a new sample with the given name.
+	 * 
+	 * @param name the name of this sample
+	 * @param val the reading
+	 */
+	public Sample(String name, Double val) {
+		super();
+		this.name=name;
+		birthday=System.currentTimeMillis();
+		sample=val;
 	}
 
 	/** 

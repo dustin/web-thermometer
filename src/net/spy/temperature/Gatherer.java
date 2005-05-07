@@ -58,6 +58,7 @@ public class Gatherer extends SpyThread {
 
 		getLogger().info("Initializing gatherer on " + group + ":" + port);
 		seen=Collections.synchronizedMap(new TreeMap());
+		history=Collections.synchronizedMap(new TreeMap());
 		// Serial number -> name mapping
 		serials=ResourceBundle.getBundle("net.spy.temperature.therms");
 
@@ -207,7 +208,7 @@ public class Gatherer extends SpyThread {
 			readingHistory=new LinkedList();
 			history.put(key, readingHistory);
 		}
-		Sample tmps=new Sample(key);
+		Sample tmps=new Sample(key, sample_val);
 		readingHistory.addFirst(tmps);
 		if(readingHistory.size() > MAX_HISTORY) {
 			readingHistory.removeLast();
