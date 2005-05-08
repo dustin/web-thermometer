@@ -185,7 +185,7 @@ public class HouseServlet extends PngServlet {
 		int ypoints[]=new int[numPoints];
 
 		int pos=numPoints-1;
-		for(Iterator i=vals.iterator(); i.hasNext();) {
+		for(Iterator i=vals.iterator(); pos>=0 && i.hasNext();) {
 			Double reading=(Double)i.next();
 			float val=reading.floatValue();
 			// Calculate x point
