@@ -42,9 +42,9 @@ public class Gatherer extends SpyThread {
 
 	private int updates=0;
 	// The map of names to current samples
-	private Map seen=null;
+	private Map<String,Sample> seen=null;
 	// To hold historical samples
-	private Map history=null;
+	private Map<String, LinkedList<Sample>> history=null;
 	private ResourceBundle serials=null;
 
 	/**
@@ -117,7 +117,7 @@ public class Gatherer extends SpyThread {
 	 * 
 	 * @return an unmodifiable view of the seen map
 	 */
-	public Map getSeen() {
+	public Map<String, Sample> getSeen() {
 		return(Collections.unmodifiableMap(seen));
 	}
 
@@ -130,7 +130,7 @@ public class Gatherer extends SpyThread {
 	 */
 	public Double getSeen(String name) {
 		Double rv=null;
-		Sample s=(Sample)seen.get(name);
+		Sample s=seen.get(name);
 
 		if(s != null) {
 			if(s.age() > MAX_AGE) {
@@ -152,9 +152,9 @@ public class Gatherer extends SpyThread {
 	 * @param name the name of the thermometer
 	 * @return an unmodifiable List of Sample objects
 	 */
-	public List getHistory(String name) {
-		List rv=Collections.EMPTY_LIST;
-		List hist=(List)history.get(name);
+	public List<Sample> getHistory(String name) {
+		List<Sample> rv=Collections.EMPTY_LIST;
+		List hist=history.get(name);
 		if(hist != null) {
 			rv=Collections.unmodifiableList(hist);
 		}
@@ -195,7 +195,7 @@ public class Gatherer extends SpyThread {
 		}
 
 		// See if we need to update an existing key, or add a new one
-		Sample sample=(Sample)seen.get(key);
+		Sample sample=seen.get(key);
 		if(sample==null) {
 			sample=new Sample(key);
 			seen.put(key, sample);

@@ -8,7 +8,6 @@ import java.util.TreeMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Date;
 
 import java.text.MessageFormat;
@@ -39,16 +38,16 @@ public class WapReport extends JWHttpServlet {
 	}
 
 	private String getWml() throws ServletException {
-		Map stats=new HashMap();
-		TreeMap nameMap=new TreeMap();
-		Map nameMapRev=new HashMap();
+		Map<String, List<Stat>> stats=new HashMap();
+		TreeMap<String, String> nameMap=new TreeMap();
+		Map<String, String> nameMapRev=new HashMap();
 
 		try {
 			SummaryByDay sbd=new SummaryByDay(new TempConf());
 			ResultSet rs=sbd.executeQuery();
 			while(rs.next()) {
 				Stat s=new Stat(rs);
-				List l=(List)stats.get(s.sn);
+				List l=stats.get(s.sn);
 				if(l == null) {
 					l=new ArrayList();
 					stats.put(s.sn, l);
@@ -76,8 +75,7 @@ public class WapReport extends JWHttpServlet {
 		sb.append(sdf.format(new java.util.Date()));
 		sb.append("<br/>\n");
 
-		for(Iterator i=nameMap.entrySet().iterator(); i.hasNext(); ) {
-			Map.Entry me=(Map.Entry)i.next();
+		for(Map.Entry me : nameMap.entrySet()) {
 			sb.append("<a href=\"#s" + me.getValue() + "\">"
 				+ me.getKey() + "</a><br/>\n");
 		}
@@ -92,14 +90,12 @@ public class WapReport extends JWHttpServlet {
 			+ "{3,number,#.#} "
 			+ "{4,number,#.#}<br/>");
 
-		for(Iterator i=stats.entrySet().iterator(); i.hasNext(); ) {
-			Map.Entry me=(Map.Entry)i.next();
+		for(Map.Entry<String, List<Stat>>me : stats.entrySet()) {
 			sb.append("<card id=\"s" + me.getKey() + "\" title=\""
 				+ nameMapRev.get(me.getKey())
 				+ "\">\n<p>min/avg/max/stddev<br/>\n");
 
-			for(Iterator i2=((List)me.getValue()).iterator(); i2.hasNext(); ) {
-				Stat s=(Stat)i2.next();
+			for(Stat s : me.getValue()) {
 				Object args[]={s.day,
 					new Float(s.min), new Float(s.avg),
 					new Float(s.max), new Float(s.stddev)};

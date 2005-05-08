@@ -15,7 +15,6 @@ import java.net.MalformedURLException;
 
 import java.util.Calendar;
 import java.util.Map;
-import java.util.Iterator;
 
 import java.text.SimpleDateFormat;
 
@@ -184,8 +183,8 @@ public class Temperature extends PngServlet {
 	private String listTemps() {
 		String ret="";
 
-		for(Iterator i=gatherer.getSeen().keySet().iterator(); i.hasNext();) {
-			ret+=i.next() + "\n";
+		for(String name : gatherer.getSeen().keySet()) {
+			ret+=name + "\n";
 		}
 
 		return(ret);
@@ -194,8 +193,7 @@ public class Temperature extends PngServlet {
 	private String listReadings() {
 		String ret="";
 
-		for(Iterator i=gatherer.getSeen().entrySet().iterator(); i.hasNext();) {
-			Map.Entry me=(Map.Entry)i.next();
+		for(Map.Entry<String, Sample> me : gatherer.getSeen().entrySet()) {
 			ret+=me.getKey() + "=" + me.getValue() + "\n";
 		}
 
@@ -218,11 +216,10 @@ public class Temperature extends PngServlet {
 		sb.append("</p>\n");
 		sb.append("<p>\n");
 		// Add the contents
-		for(Iterator i=gatherer.getSeen().entrySet().iterator(); i.hasNext();) {
-			Map.Entry me=(Map.Entry)i.next();
+		for(Map.Entry<String, Sample> me : gatherer.getSeen().entrySet()) {
 			sb.append(me.getKey());
 			sb.append("=");
-			Sample s=(Sample)me.getValue();
+			Sample s=me.getValue();
 			sb.append(s.getSample());
 			sb.append("<br/>\n");
 		}
@@ -239,12 +236,11 @@ public class Temperature extends PngServlet {
 		sb.append("<?xml version=\"1.0\"?>\n");
 		sb.append("<therms>\n");
 		// Add the contents
-		for(Iterator i=gatherer.getSeen().entrySet().iterator(); i.hasNext();) {
-			Map.Entry me=(Map.Entry)i.next();
+		for(Map.Entry<String, Sample> me : gatherer.getSeen().entrySet()) {
 			sb.append("<therm id=\"");
 			sb.append(me.getKey());
 			sb.append("\">");
-			Sample s=(Sample)me.getValue();
+			Sample s=me.getValue();
 			sb.append(s.getSample());
 			sb.append("</therm>\n");
 		}

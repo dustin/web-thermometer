@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
 
 import javax.servlet.ServletConfig;
@@ -174,7 +173,7 @@ public class HouseServlet extends PngServlet {
 	}
 
 	private void drawSparks(Graphics g, double low, double high,
-		int x, int y, int w, int h, List vals) {
+		int x, int y, int w, int h, List<Double> vals) {
 
 		int numPoints=vals.size();
 		if(numPoints > w) {
@@ -184,9 +183,11 @@ public class HouseServlet extends PngServlet {
 		int xpoints[]=new int[numPoints];
 		int ypoints[]=new int[numPoints];
 
+		// Just get the ones we're going to be using.
+		List<Double> someVals=vals.subList(0, numPoints);
+
 		int pos=numPoints-1;
-		for(Iterator i=vals.iterator(); pos>=0 && i.hasNext();) {
-			Double reading=(Double)i.next();
+		for(Double reading : someVals) {
 			float val=reading.floatValue();
 			// Calculate x point
 			xpoints[pos]=x+pos;
@@ -223,12 +224,11 @@ public class HouseServlet extends PngServlet {
 		int sparky=houseConfig.getInt(which + ".spark.y", (y+h)-sparkh);
 
 		// Get the readings and convert them to plain Doubles
-		List sampleList=(List)Temperature.gatherer.getHistory(which);
+		List<Sample> sampleList=Temperature.gatherer.getHistory(which);
 		double high=Double.MIN_VALUE;
 		double low=Double.MAX_VALUE;
-		List readings=new ArrayList(sampleList.size());
-		for(Iterator i=sampleList.iterator(); i.hasNext(); ) {
-			Sample s=(Sample)i.next();
+		List<Double> readings=new ArrayList(sampleList.size());
+		for(Sample s : sampleList) {
 			Double reading=s.getSample();
 			double val=reading.doubleValue();
 			if(val > high) {
@@ -254,15 +254,15 @@ public class HouseServlet extends PngServlet {
 
 		// Find all the things we need to colorize
 		String things[]=SpyUtil.split(" ", houseConfig.get("colorize", ""));
-		for(int i=0; i<things.length; i++) {
+		for(String which : things) {
 			int x, y, w, h;
 
 			String rstring=null;
 
-			x=houseConfig.getInt(things[i] + ".rect.x", 0);
-			y=houseConfig.getInt(things[i] + ".rect.y", 0);
-			w=houseConfig.getInt(things[i] + ".rect.w", 0);
-			h=houseConfig.getInt(things[i] + ".rect.h", 0);
+			x=houseConfig.getInt(which + ".rect.x", 0);
+			y=houseConfig.getInt(which + ".rect.y", 0);
+			w=houseConfig.getInt(which + ".rect.w", 0);
+			h=houseConfig.getInt(which + ".rect.h", 0);
 
 			// Draw a black border around a white box
 			g.setColor(Color.BLACK);
@@ -271,19 +271,19 @@ public class HouseServlet extends PngServlet {
 			g.fillRect(x, y, w, h);
 
 			try {
-				Double dreading=Temperature.gatherer.getSeen(things[i]);
+				Double dreading=Temperature.gatherer.getSeen(which);
 				double reading=dreading.doubleValue();
 				rstring="" + reading;
 
 				// Set the color based on the temperature reading.
-				fillGradient(things[i], g, reading, x, y, w, h);
+				fillGradient(which, g, reading, x, y, w, h);
 			} catch(Exception e) {
 				e.printStackTrace();
 				rstring="??.??";
 			}
 			// Draw the reading label
-			drawLabel(g, things[i], rstring, x, y, w, h);
-			drawSparkline(g, things[i], x, y, w, h);
+			drawLabel(g, which, rstring, x, y, w, h);
+			drawSparkline(g, which, x, y, w, h);
 		}
 
 		return(img);

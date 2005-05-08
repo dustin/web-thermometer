@@ -5,7 +5,6 @@
 package net.spy.temperature;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -86,8 +85,8 @@ public class Sensor extends Object implements java.io.Serializable {
 	 *
 	 * @exception Exception when DB problems arrise
 	 */
-	public static Collection getSensors() throws Exception {
-		List l=new ArrayList(8);
+	public static Collection<Sensor> getSensors() throws Exception {
+		List<Sensor> l=new ArrayList(8);
 		SpyDB db=new SpyDB(new TempConf());
 		ResultSet rs=db.executeQuery("select * from sensors order by name");
 
@@ -138,15 +137,4 @@ public class Sensor extends Object implements java.io.Serializable {
 		high=rs.getInt("high");
 	}
 
-	public static void main(String args[]) throws Exception {
-		if(args.length>0) {
-			int id=Integer.parseInt(args[0]);
-			Sensor s=new Sensor(id);
-			System.out.println("Found this:  " + s);
-		} else {
-			for(Iterator i=Sensor.getSensors().iterator(); i.hasNext(); ) {
-				System.out.println(i.next());
-			}
-		}
-	}
 }
