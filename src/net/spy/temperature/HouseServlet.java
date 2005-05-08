@@ -192,7 +192,7 @@ public class HouseServlet extends PngServlet {
 			xpoints[pos]=x+pos;
 			// Calculate y point
 			float heightPercent=(float)(val-low)/(float)(high-low);
-			ypoints[pos]=y + (int)((float)h * heightPercent);
+			ypoints[pos]=(y+h) - (int)((float)h * heightPercent);
 			if(ypoints[pos] > y+h) {
 				log("y point " + ypoints[pos] + " exceeded maximum value "
 					+ (y+h));
