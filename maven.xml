@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!-- Copyright (c) 2005  Dustin Sallings (dustin@spy.net) -->
+
+<project default="war">
+	<preGoal name="java:compile">
+		<attainGoal name="spy:spt"/>
+	</preGoal>
+	<preGoal name="war">
+		<xmlvalidate failonerror="yes">
+			<fileset dir="src/webapp/" includes="**/*.xml"/>
+		</xmlvalidate>
+	</preGoal>
+</project>
