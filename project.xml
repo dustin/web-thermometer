@@ -84,7 +84,7 @@
 		<resources>
 			<resource>
 				<directory>${basedir}/etc</directory>
-			  <targetPath>WEB-INF/classes/net/spy/temperature</targetPath>
+			  <targetPath>net/spy/temperature</targetPath>
 				<includes>
 					<include>**/*.properties</include>
 				</includes>
