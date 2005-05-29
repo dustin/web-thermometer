@@ -51,7 +51,7 @@
 
 		<init-param>
 			<param-name>baseImage</param-name>
-			<param-value>/images/house.gif</param-value>
+			<param-value>/images/house.png</param-value>
 		</init-param>
 
 		<init-param>
