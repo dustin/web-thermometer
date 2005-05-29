@@ -248,7 +248,9 @@ public class HouseServlet extends PngServlet {
 
 	// Graphical representation of the image.
 	private Image getHouseImage() throws Exception {
-		Image img=createImage(307, 223);
+		Image img=createImage(
+			houseConfig.getInt("house.w", 272),
+			houseConfig.getInt("house.h", 193));
 		Graphics g=img.getGraphics();
 		g.drawImage(baseImage, 0, 0, new StupidImageObserver());
 
