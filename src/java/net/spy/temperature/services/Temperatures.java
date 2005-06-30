@@ -4,13 +4,15 @@
 
 package net.spy.temperature.services;
 
-import java.util.*;
 import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 
 import net.spy.rpc.services.Remote;
-
-import net.spy.temperature.Sample;
 import net.spy.temperature.Gatherer;
+import net.spy.temperature.Sample;
 
 /**
  * XML RPC Interface to temperature gettin'

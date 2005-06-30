@@ -6,36 +6,28 @@
 
 package net.spy.temperature;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.io.IOException;
-import java.io.PrintWriter;
-
-import java.net.URL;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
-
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
-
-import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.Graphics;
-
-import net.spy.cache.SpyCache;
-import net.spy.png.PngServlet;
-import net.spy.png.StupidImageObserver;
-import net.spy.png.ImageLoader;
-
 import net.spy.cron.Cron;
 import net.spy.cron.JobQueue;
 import net.spy.cron.TimeIncrement;
+import net.spy.png.ImageLoader;
+import net.spy.png.PngServlet;
+import net.spy.png.StupidImageObserver;
 
 // The class
 public class Temperature extends PngServlet {
@@ -46,14 +38,10 @@ public class Temperature extends PngServlet {
 	// shared gatherer instance
 	static Gatherer gatherer=null;
 
-	private SpyCache cache=null;
-
 	private Cron cron=null;
 
 	// Image stuff.
 	private Image baseImage=null;
-	private Color black=null;
-	private Color white=null;
 	private Font font=null;
 
 	// The once only init thingy.
@@ -70,15 +58,11 @@ public class Temperature extends PngServlet {
 			log("Getting the base image.");
 			getBaseImage();
 			log("Got the base image.");
-			cache=SpyCache.getInstance();
 
 		} catch(Exception e) {
 			throw new ServletException("Error getting base image", e);
 		}
 
-		// Initializing image stuff.
-		black=new Color(0, 0, 0);
-		white=new Color(255, 255, 255);
 		font=new Font("SanSerif", Font.PLAIN, 10);
 
 		// Set up the cron.
@@ -288,7 +272,7 @@ public class Temperature extends PngServlet {
 		Graphics g = image.getGraphics();
 		// Prepare the drawing stuff.
 		g.setFont(font);
-		g.setColor(black);
+		g.setColor(Color.BLACK);
 
 		// Draw the base thermometer
 		g.drawImage(baseImage, 0, 0, new StupidImageObserver());

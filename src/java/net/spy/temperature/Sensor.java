@@ -4,12 +4,11 @@
 
 package net.spy.temperature;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import net.spy.db.SpyDB;
 
@@ -28,9 +27,9 @@ public class Sensor extends Object implements java.io.Serializable {
 	 * @exception Exception on stuff like invalid or uknown ids or other
 	 * failures.
 	 */
-	public Sensor(int sensor_id) throws Exception {
+	public Sensor(int id) throws Exception {
 		super();
-		getSensor(sensor_id);
+		getSensor(id);
 	}
 
 	private Sensor(ResultSet rs) throws Exception {
@@ -116,12 +115,12 @@ public class Sensor extends Object implements java.io.Serializable {
 		return(sb.toString());
 	}
 
-	private void getSensor(int sensor_id) throws Exception {
+	private void getSensor(int id) throws Exception {
 		SpyDB db=new SpyDB(new TempConf());
 		PreparedStatement pst=db.prepareStatement(
 			"select * from sensors where sensor_id = ? "
 			);
-		pst.setInt(1, sensor_id);
+		pst.setInt(1, id);
 		ResultSet rs=pst.executeQuery();
 		rs.next();
 		initFromResultSet(rs);

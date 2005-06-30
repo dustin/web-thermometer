@@ -10,38 +10,33 @@ package net.spy.temperature;
 public class Sample extends Object {
 
 	private String name=null;
-	private long birthday=0;
 	private long modtime=0;
 	private Double sample=null;
 
 	/** 
 	 * Get a new sample with the given name.
 	 * 
-	 * @param name the name of this sample
+	 * @param nm the name of this sample
 	 */
-	public Sample(String name) {
+	public Sample(String nm) {
 		super();
-		this.name=name;
-		birthday=System.currentTimeMillis();
+		this.name=nm;
 	}
 
 	/** 
 	 * Get a new sample with the given name.
 	 * 
-	 * @param name the name of this sample
+	 * @param nm the name of this sample
 	 * @param val the reading
 	 */
-	public Sample(String name, Double val) {
+	public Sample(String nm, Double val) {
 		super();
-		this.name=name;
-		birthday=System.currentTimeMillis();
+		this.name=nm;
 		sample=val;
 	}
 
 	/** 
 	 * String me.
-	 * 
-	 * @return 
 	 */
 	public String toString() {
 		return("{Sample:  " + name + " val=" + sample
@@ -57,8 +52,6 @@ public class Sample extends Object {
 
 	/** 
 	 * Get the sample.
-	 * 
-	 * @return 
 	 */
 	public Double getSample() {
 		return(sample);

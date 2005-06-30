@@ -24,10 +24,11 @@ public class RainData extends WeatherData {
 	/**
 	 * Get a Rain data object.
 	 */
-	public RainData(int type, byte data[]) {
-		super(type, data);
-		if(type!=RAIN) {
-			throw new Error("This is not a rain data set:  " + type);
+	public RainData(int t, byte d[]) {
+		super(t, d);
+		if(t != RAIN) {
+			throw new IllegalArgumentException("This is not a rain data set:  "
+				+ t);
 		}
 	}
 
@@ -63,9 +64,9 @@ public class RainData extends WeatherData {
 	 */
 	public double getRainRate() {
 		int bc=getBCDInt(data[0]);
-		int a=getBCDInt((int)data[1]&0xf);
+		int a=getBCDInt(data[1]&0xf);
 
-		double d=(double)((a*100) + bc);
+		double d=((a*100) + bc);
 
 		d=convertDepth(d);
 		return(d);
@@ -79,7 +80,7 @@ public class RainData extends WeatherData {
 				d*=0.0393700787402;
 				break;
 			default:
-				throw new Error("Invalid depth unit:  " + depth_unit);
+				throw new RuntimeException("Invalid depth unit:  " + depth_unit);
 		}
 		return(d);
 	}

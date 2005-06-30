@@ -6,9 +6,9 @@
 
 package net.spy.weather;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.io.IOException;
 
 /** 
  * Socket to listen for weather updates.

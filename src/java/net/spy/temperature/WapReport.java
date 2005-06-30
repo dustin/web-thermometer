@@ -3,26 +3,22 @@
 package net.spy.temperature;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
-
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.spy.jwebkit.JWHttpServlet;
-
 import net.spy.temperature.sp.SummaryByDay;
 
 /**

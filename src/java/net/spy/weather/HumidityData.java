@@ -12,11 +12,12 @@ public class HumidityData extends WeatherData {
 	/**
 	 * Get a time and humidity data object.
 	 */
-	public HumidityData(int type, byte data[]) {
-		super(type, data);
-		if(type!=TIMEHUMDITY) {
-			throw new Error("This is not a time and humidity data set:  "
-				+ type);
+	public HumidityData(int t, byte d[]) {
+		super(t, d);
+		if(t!=TIMEHUMDITY) {
+			throw new IllegalArgumentException(
+				"This is not a time and humidity data set:  "
+					+ t);
 		}
 	}
 
@@ -51,7 +52,7 @@ public class HumidityData extends WeatherData {
 	 * Yeah, get the outdoor humidity.
 	 */
 	public double getOutdoorHumidity() {
-		double d=(double)getBCDInt(data[19]);
+		double d=getBCDInt(data[19]);
 		return(d);
 	}
 
@@ -59,7 +60,7 @@ public class HumidityData extends WeatherData {
 	 * Get the indoor humidity.
 	 */
 	public double getIndoorHumidity() {
-		double d=(double)getBCDInt(data[7]);
+		double d=getBCDInt(data[7]);
 		return(d);
 	}
 

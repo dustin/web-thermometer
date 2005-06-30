@@ -23,12 +23,12 @@ public class WeatherMonitor extends LoopingThread {
 	private String server=null;
 	private int port=-1;
 
-	public WeatherMonitor(String hostname, int port) throws Exception {
+	public WeatherMonitor(String hostname, int prt) throws Exception {
 		super("Weather Monitor");
 		this.server=hostname;
-		this.port=port;
+		this.port=prt;
 
-		wx200d=new WMSocket(hostname, port);
+		wx200d=new WMSocket(hostname, prt);
 		setName("Weather Monitor");
 		setDaemon(true);
 		setMsPerLoop(1000);

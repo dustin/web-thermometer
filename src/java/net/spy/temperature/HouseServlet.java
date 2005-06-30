@@ -6,36 +6,32 @@
 
 package net.spy.temperature;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.net.MalformedURLException;
-import java.util.List;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.util.SpyConfig;
-import net.spy.util.SpyUtil;
-
-import java.awt.Image;
-import java.awt.Color;
-import java.awt.Graphics;
-
+import net.spy.png.ImageLoader;
 import net.spy.png.PngServlet;
 import net.spy.png.StupidImageObserver;
-import net.spy.png.ImageLoader;
+import net.spy.util.SpyConfig;
+import net.spy.util.SpyUtil;
 
 // The class
 public class HouseServlet extends PngServlet { 
 
 	// The base house image.
 	private Image baseImage=null;
-	private boolean imageLoaded=false;
-
 	// The house config file path
 	private SpyConfig houseConfig=null;
 
@@ -89,8 +85,8 @@ public class HouseServlet extends PngServlet {
 
 		int min=houseConfig.getInt(name + ".min", 0);
 		int max=houseConfig.getInt(name + ".max", 100);
-		double normal=((double)min) + (((double)(max-min)) / 2.0);
-		double maxDistance = (double)(max - min);
+		double normal=min + ((max-min) / 2.0);
+		double maxDistance = (max - min);
 
 		if(reading < min) {
 			rv=Color.BLUE;
@@ -131,7 +127,7 @@ public class HouseServlet extends PngServlet {
 		//  1) which.maxRelevantDistance
 		//  2) maxRelevantDistance
 		//  3) default to 60
-		double maxRelevantDistance = (double)houseConfig.getInt(
+		double maxRelevantDistance = houseConfig.getInt(
 			which + ".maxRelevantDistance",
 			houseConfig.getInt("maxRelevantDistance", 60));
 
@@ -145,8 +141,8 @@ public class HouseServlet extends PngServlet {
 				// px,py is the absolute point within the diagram
 				int px=x+i;
 				int py=y+j;
-				double xd = (double)(px-tx);
-				double yd = (double)(py-ty);
+				double xd = (px-tx);
+				double yd = (py-ty);
 				double distance=Math.sqrt(xd*xd + yd*yd);
 
 				// The relevance of the thermometer on this pixel is inversely
@@ -193,7 +189,7 @@ public class HouseServlet extends PngServlet {
 			xpoints[pos]=x+pos;
 			// Calculate y point
 			float heightPercent=(float)(val-low)/(float)(high-low);
-			ypoints[pos]=(y+h) - (int)((float)h * heightPercent);
+			ypoints[pos]=(y+h) - (int)(h * heightPercent);
 			if(ypoints[pos] > y+h) {
 				log("y point " + ypoints[pos] + " exceeded maximum value "
 					+ (y+h));

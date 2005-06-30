@@ -29,10 +29,10 @@ public class BarometerData extends WeatherData {
 
 	protected int baro_unit=0;
 
-	public BarometerData(int type, byte data[]) {
-		super(type, data);
-		if(type!=BAROMETERDEW) {
-			throw new Error("Invalid type code for wind:  " + type);
+	public BarometerData(int t, byte d[]) {
+		super(t, d);
+		if(t!=BAROMETERDEW) {
+			throw new IllegalArgumentException("Invalid type code for wind:  " + t);
 		}
 	}
 
@@ -43,7 +43,7 @@ public class BarometerData extends WeatherData {
 	 */
 	public String getPrediction() {
 		String p=null;
-		int d=(int)data[5]&0x0f;
+		int d=data[5]&0x0f;
 		switch(d) {
 			case 1:
 				p="Sunny";
@@ -58,7 +58,7 @@ public class BarometerData extends WeatherData {
 				p="Rain";
 				break;
 			default:
-				throw new Error("Invalid prediction:  " + d);
+				throw new RuntimeException("Invalid prediction:  " + d);
 		}
 		return(p);
 	}
@@ -134,7 +134,7 @@ public class BarometerData extends WeatherData {
 	 * Get the current outdoor dew point.
 	 */
 	public double getOutdoorDewPoint() {
-		double d=(double)getBCDInt(data[17]);
+		double d=getBCDInt(data[17]);
 		d=convertTemp(d);
 		return(d);
 	}
@@ -143,7 +143,7 @@ public class BarometerData extends WeatherData {
 	 * Get the current indoor dew point.
 	 */
 	public double getIndoorDewPoint() {
-		double d=(double)getBCDInt(data[6]);
+		double d=getBCDInt(data[6]);
 		d=convertTemp(d);
 		return(d);
 	}
@@ -169,7 +169,7 @@ public class BarometerData extends WeatherData {
 	 * @return -1 for falling, 0 for steady, 1 for rising.
 	 */
 	public int getTrend() {
-		int d=((int)data[5]&0x70)>>4;
+		int d=(data[5]&0x70)>>4;
 		int rv=0;
 
 		switch(d) {
@@ -183,7 +183,7 @@ public class BarometerData extends WeatherData {
 				rv=1;
 				break;
 			default:
-				throw new Error("Invalid trend returned:  " + d);
+				throw new RuntimeException("Invalid trend returned:  " + d);
 		}
 
 		return(rv);
@@ -203,7 +203,7 @@ public class BarometerData extends WeatherData {
 			case HPA:
 				break;
 			default:
-				throw new Error("Illegal unit type:  " + baro_unit);
+				throw new RuntimeException("Illegal unit type:  " + baro_unit);
 		}
 		return(d);
 	}

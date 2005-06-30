@@ -5,20 +5,18 @@
 package net.spy.temperature;
 
 import java.io.IOException;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.TreeMap;
-import java.util.Iterator;
-import java.util.ResourceBundle;
-import java.util.MissingResourceException;
-import java.util.StringTokenizer;
-
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import net.spy.SpyThread;
 
@@ -35,9 +33,8 @@ public class Gatherer extends SpyThread {
 
 	private static Gatherer instance=null;
 
-	private MulticastSocket s=null;
+	private MulticastSocket socket=null;
 	private InetAddress group=null;
-	private int port=-1;
 	private boolean running=true;
 
 	private int updates=0;
@@ -50,20 +47,18 @@ public class Gatherer extends SpyThread {
 	/**
 	 * Get an instance of Gatherer.
 	 */
-	private Gatherer(InetAddress group, int port) throws IOException {
+	private Gatherer(InetAddress grp, int prt) throws IOException {
 		super();
 
-		this.group=group;
-		this.port=port;
-
-		getLogger().info("Initializing gatherer on " + group + ":" + port);
+		this.group=grp;
+		getLogger().info("Initializing gatherer on " + grp + ":" + prt);
 		seen=Collections.synchronizedMap(new TreeMap());
 		history=Collections.synchronizedMap(new TreeMap());
 		// Serial number -> name mapping
 		serials=ResourceBundle.getBundle("net.spy.temperature.therms");
 
-		s=new MulticastSocket(port);
-		s.joinGroup(group);
+		socket=new MulticastSocket(prt);
+		socket.joinGroup(grp);
 
 		setName("Temperature Gatherer");
 		setDaemon(true);
@@ -105,8 +100,8 @@ public class Gatherer extends SpyThread {
 		running=false;
 
 		try {
-			s.leaveGroup(group);
-			s.close();
+			socket.leaveGroup(group);
+			socket.close();
 		} catch(IOException e) {
 			getLogger().warn("Problem leaving multicast group.", e);
 		}
@@ -171,7 +166,7 @@ public class Gatherer extends SpyThread {
 		if(st.countTokens() < 3) {
 			throw new IOException("This message doesn't make sense:  " + entry);
 		}
-		String date_str = st.nextToken();
+		st.nextToken(); // date string
 		String serial = st.nextToken();
 		String sample_str = st.nextToken();
 		
@@ -203,7 +198,7 @@ public class Gatherer extends SpyThread {
 		sample.setSample(sample_val);
 
 		// Also store the history
-		LinkedList readingHistory=(LinkedList)history.get(key);
+		LinkedList readingHistory=history.get(key);
 		if(readingHistory == null) {
 			readingHistory=new LinkedList();
 			history.put(key, readingHistory);
@@ -240,7 +235,7 @@ public class Gatherer extends SpyThread {
 			try {
 				byte data[]=new byte[1500];
 				DatagramPacket recv = new DatagramPacket(data, data.length);
-				s.receive(recv);
+				socket.receive(recv);
 				process(recv);
 
 				cleanup();

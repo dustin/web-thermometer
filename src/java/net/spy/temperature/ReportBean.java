@@ -4,19 +4,18 @@
 
 package net.spy.temperature;
 
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
-import net.spy.temperature.sp.report.ReportQuery;
-import net.spy.temperature.sp.report.Histogram;
-import net.spy.temperature.sp.report.MinHour;
 import net.spy.temperature.sp.report.AvgHour;
+import net.spy.temperature.sp.report.Histogram;
 import net.spy.temperature.sp.report.MaxHour;
+import net.spy.temperature.sp.report.MinHour;
+import net.spy.temperature.sp.report.ReportQuery;
 import net.spy.temperature.sp.report.Vitality;
 
 /**
@@ -161,8 +160,6 @@ public class ReportBean extends Object implements java.io.Serializable {
 
 	// This really does the report, now that we know we have ok-ish data
 	protected void doReport() throws Exception {
-
-		String query=null;
 
 		ReportQuery db=null;
 		TempConf conf=new TempConf();

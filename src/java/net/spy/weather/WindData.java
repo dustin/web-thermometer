@@ -29,10 +29,10 @@ public class WindData extends WeatherData {
 
 	protected int speed_unit=MPH;
 
-	public WindData(int type, byte data[]) {
-		super(type, data);
-		if(type!=WIND) {
-			throw new Error("Invalid type code for wind:  " + type);
+	public WindData(int t, byte d[]) {
+		super(t, d);
+		if(t!=WIND) {
+			throw new IllegalArgumentException("Invalid type code for wind:  " + t);
 		}
 	}
 
@@ -63,8 +63,8 @@ public class WindData extends WeatherData {
 	 * Get the wind speed converted to the current unit.
 	 */
 	public double getWindSpeed() {
-		double bc=(double)getBCDInt(data[0]);
-		double a=(double)getBCDInt((int)data[1]&0xf);
+		double bc=getBCDInt(data[0]);
+		double a=getBCDInt(data[1]&0xf);
 
 		double d=(a*10)+(bc/10.0);
 

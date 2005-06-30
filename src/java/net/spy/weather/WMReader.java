@@ -6,8 +6,8 @@
 
 package net.spy.weather;
 
-import java.io.IOException;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -16,14 +16,14 @@ import java.io.InputStream;
 public class WMReader extends InputStream {
 
 	// Our host input stream.
-	InputStream is=null;
+	private InputStream stream=null;
 
 	/**
 	 * Get a WMReader object that gets its info from the passed InputStream
 	 */
 	public WMReader(InputStream is) {
 		super();
-		this.is=is;
+		this.stream=is;
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class WMReader extends InputStream {
 	 * Return a byte from our host input stream.
 	 */
 	public int read() throws IOException {
-		return(is.read());
+		return(stream.read());
 	}
 
 	/**

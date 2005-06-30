@@ -2,20 +2,17 @@
 
 package net.spy.temperature;
 
-import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
-
+import java.sql.Connection;
 import java.util.Date;
 
-import java.sql.SQLException;
-import java.sql.Connection;
-
-import net.spy.util.SpyConfig;
 import net.spy.cron.Job;
 import net.spy.cron.TimeIncrement;
-import net.spy.db.SpyDB;
 import net.spy.db.SQLRunner;
+import net.spy.db.SpyDB;
+import net.spy.util.SpyConfig;
 
 /**
  * Nightly job to clean up the DB and stuff.
@@ -28,9 +25,9 @@ public class ScriptRunner extends Job {
 	/**
 	 * Get an instance of Nightly.
 	 */
-	public ScriptRunner(String name, Date d, TimeIncrement ti, String path) {
+	public ScriptRunner(String name, Date d, TimeIncrement ti, String filePath) {
 		super(name, d, ti);
-		this.path=path;
+		this.path=filePath;
 		conf=new TempConf();
 	}
 
