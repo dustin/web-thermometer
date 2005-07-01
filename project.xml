@@ -70,6 +70,12 @@
 			<version>1.0.1</version>
 			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
+		<dependency>
+			<groupId>spy</groupId>
+			<artifactId>maven-spy-build-plugin</artifactId>
+			<version>1.0</version>
+			<type>plugin</type>
+		</dependency>
 
 		<dependency>
 			<groupId>postgresql</groupId>
