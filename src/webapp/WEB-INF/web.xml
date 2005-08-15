@@ -39,11 +39,6 @@
 		<url-pattern>/House</url-pattern>
 	</filter-mapping>
 
-	<filter-mapping>
-		<filter-name>fiveMinuteCacheControl</filter-name>
-		<url-pattern>/weather</url-pattern>
-	</filter-mapping>
-
 	<!-- The house servlet -->
 	<servlet>
 		<servlet-name>House</servlet-name>
@@ -90,17 +85,6 @@
 
 	</servlet>
 
-	<!-- The weather servlet -->
-	<servlet>
-		<servlet-name>weather</servlet-name>
-		<servlet-class>net.spy.weather.WeatherServlet</servlet-class>
-		<init-param>
-			<param-name>server</param-name>
-			<param-value>juan</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
 	<!-- RPC servlet -->
 	<servlet>
 		<servlet-name>rpc</servlet-name>
@@ -125,11 +109,6 @@
 	<servlet-mapping>
 		<servlet-name>WapReport</servlet-name>
 		<url-pattern>/WapReport</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>weather</servlet-name>
-		<url-pattern>/weather</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
