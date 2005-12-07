@@ -10,6 +10,7 @@ public class TempConf extends SpyConfig {
 
 	private File configs[]={
 		new File("/afs/spy.net/misc/web/etc/temperature.conf"),
+		new File("/data/web/etc/temperature.conf"),
 		new File("/usr/local/etc/temperature.conf"),
 		new File("temperature.conf"),
 		new File("/tmp/temperature.conf")
