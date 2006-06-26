@@ -238,6 +238,12 @@ public class HouseServlet extends PngServlet {
 		// If I have at least two points, plot them.
 		if(readings.size() > 1) {
 			g.setColor(Color.GRAY);
+			// Make sure there's at least a half a degree for each pixel
+			if((high-low) < sparkh) {
+				double avg=high-((high-low)/2);
+				low=avg+(sparkh/2);
+				high=avg-(sparkh/2);
+			}
 			drawSparks(g, low, high, sparkx, sparky, sparkw, sparkh, readings);
 		}
 	}
