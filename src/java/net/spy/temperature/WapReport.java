@@ -39,7 +39,7 @@ public class WapReport extends JWHttpServlet {
 		Map<String, String> nameMapRev=new HashMap();
 
 		try {
-			SummaryByDay sbd=new SummaryByDay(new TempConf());
+			SummaryByDay sbd=new SummaryByDay(TempConf.getInstance());
 			ResultSet rs=sbd.executeQuery();
 			while(rs.next()) {
 				Stat s=new Stat(rs);

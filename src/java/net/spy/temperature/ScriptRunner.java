@@ -28,7 +28,7 @@ public class ScriptRunner extends Job {
 	public ScriptRunner(String name, Date d, TimeIncrement ti, String filePath) {
 		super(name, d, ti);
 		this.path=filePath;
-		conf=new TempConf();
+		conf=TempConf.getInstance();
 	}
 
 	// Find the named script (classloader relative)

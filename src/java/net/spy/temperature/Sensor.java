@@ -86,7 +86,7 @@ public class Sensor extends Object implements java.io.Serializable {
 	 */
 	public static Collection<Sensor> getSensors() throws Exception {
 		List<Sensor> l=new ArrayList(8);
-		SpyDB db=new SpyDB(new TempConf());
+		SpyDB db=new SpyDB(TempConf.getInstance());
 		ResultSet rs=db.executeQuery("select * from sensors order by name");
 
 		while(rs.next()) {
@@ -116,7 +116,7 @@ public class Sensor extends Object implements java.io.Serializable {
 	}
 
 	private void getSensor(int id) throws Exception {
-		SpyDB db=new SpyDB(new TempConf());
+		SpyDB db=new SpyDB(TempConf.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select * from sensors where sensor_id = ? "
 			);

@@ -162,7 +162,7 @@ public class ReportBean extends Object implements java.io.Serializable {
 	protected void doReport() throws Exception {
 
 		ReportQuery db=null;
-		TempConf conf=new TempConf();
+		TempConf conf=TempConf.getInstance();
 
 		// Get the report's SQL
 		switch(report_num) {
