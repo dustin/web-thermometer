@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>xmlrpc</groupId>
 			<artifactId>xmlrpc</artifactId>
-			<version>1.2</version>
+			<version>2.0</version>
 			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 
@@ -84,6 +84,19 @@
 			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.1.2</version>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
+
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
 
 		<dependency>
 			<groupId>servletapi</groupId>
