@@ -67,19 +67,6 @@ public class ReportBean extends Object implements java.io.Serializable {
 	}
 
 	/**
-	 * Get an Enumeration of Sensor objects describing all the known sensors.
-	 *
-	 * @exception Exception when stuff breaks.
-	 */
-	public static void main(String args[]) throws Exception {
-		ReportBean rb=new ReportBean();
-
-		for(Iterator i=rb.getSensors().iterator(); i.hasNext(); ) {
-			System.out.println(i.next().toString());
-		}
-	}
-
-	/**
 	 * Set the start date for the report.
 	 */
 	public void setStartdate(String to) {
