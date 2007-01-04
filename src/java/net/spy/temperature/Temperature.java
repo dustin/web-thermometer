@@ -77,9 +77,12 @@ public class Temperature extends PngServlet {
 		cal.set(Calendar.MINUTE, 3);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		// Add a day so it happens tomorrow.  This wil cause us to skip a day
-		// if we deploy between midnight and 2:03.  Woo.
-		cal.add(Calendar.DAY_OF_MONTH, 1);
+		// Make sure this happens in the future.
+		Date now=new Date();
+		while(cal.getTime().before(now)) {
+			log("Adding a day to " + cal.getTime());
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+		}
 
 		log("Queueing nightly job starting at " + cal.getTime());
 		timer.scheduleAtFixedRate(
