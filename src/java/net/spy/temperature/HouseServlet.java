@@ -36,6 +36,7 @@ public class HouseServlet extends PngServlet {
 	private SpyConfig houseConfig=null;
 
 	// The once only init thingy.
+	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 
@@ -69,6 +70,7 @@ public class HouseServlet extends PngServlet {
 	}
 
 	// Do a GET request
+	@Override
 	public void doGetOrPost (
 		HttpServletRequest request, HttpServletResponse response
 	) throws ServletException, IOException {
@@ -223,7 +225,7 @@ public class HouseServlet extends PngServlet {
 		List<Sample> sampleList=Temperature.gatherer.getHistory(which);
 		double high=Double.MIN_VALUE;
 		double low=Double.MAX_VALUE;
-		List<Double> readings=new ArrayList(sampleList.size());
+		List<Double> readings=new ArrayList<Double>(sampleList.size());
 		for(Sample s : sampleList) {
 			Double reading=s.getSample();
 			double val=reading.doubleValue();

@@ -44,6 +44,7 @@ public class Temperature extends PngServlet {
 	private Font font=null;
 
 	// The once only init thingy.
+	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 
@@ -93,6 +94,7 @@ public class Temperature extends PngServlet {
 	/** 
 	 * Shut down the gatherer.
 	 */
+	@Override
 	public void destroy() {
 		log("Shutting down gatherer.");
 		gatherer.stopRunning();
@@ -108,6 +110,7 @@ public class Temperature extends PngServlet {
 	}
 
 	// Do a GET request
+	@Override
 	public void doGetOrPost (
 		HttpServletRequest request, HttpServletResponse response
 	) throws ServletException, IOException {

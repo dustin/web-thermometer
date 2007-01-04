@@ -38,6 +38,7 @@ public class Sample extends Object {
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		return("{Sample:  " + name + " val=" + sample
 			+ " age=" + age() + "}");

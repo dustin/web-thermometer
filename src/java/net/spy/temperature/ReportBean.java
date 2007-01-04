@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import net.spy.temperature.sp.report.AvgHour;
@@ -52,8 +51,8 @@ public class ReportBean extends Object implements java.io.Serializable {
 	private int report_num=-1;
 
 	// Results go here
-	private List results=null;
-	private List columns=null;
+	private List<ArrayList<String>> results=null;
+	private List<String> columns=null;
 
 	public ReportBean() {
 		super();
@@ -62,7 +61,7 @@ public class ReportBean extends Object implements java.io.Serializable {
 	/**
 	 * Returns a list of Sensor objects describing the known sensors.
 	 */
-	public Collection getSensors() throws Exception {
+	public Collection<Sensor> getSensors() throws Exception {
 		return(Sensor.getSensors());
 	}
 
@@ -105,7 +104,7 @@ public class ReportBean extends Object implements java.io.Serializable {
 	/**
 	 * Get the report results.
 	 */
-	public Collection getResults() throws Exception {
+	public Collection<ArrayList<String>> getResults() throws Exception {
 		if(results==null) {
 			throw new Exception("No results exist!");
 		}
@@ -115,7 +114,7 @@ public class ReportBean extends Object implements java.io.Serializable {
 	/**
 	 * Get the report result column names.
 	 */
-	public Collection getResultColumns() throws Exception {
+	public Collection<String> getResultColumns() throws Exception {
 		if(columns==null) {
 			throw new Exception("No results exist!");
 		}
@@ -185,8 +184,8 @@ public class ReportBean extends Object implements java.io.Serializable {
 		ResultSetMetaData rmd=rs.getMetaData();
 
 		// This is where the results go.
-		results=new ArrayList(128);
-		columns=new ArrayList(128);
+		results=new ArrayList<ArrayList<String>>(128);
+		columns=new ArrayList<String>(128);
 
 		// Figure out how many columns we've got
 		int cols=rmd.getColumnCount();
@@ -198,7 +197,7 @@ public class ReportBean extends Object implements java.io.Serializable {
 
 		// Get the results
 		while(rs.next()) {
-			ArrayList a=new ArrayList();
+			ArrayList<String> a=new ArrayList<String>();
 			for(int i=1; i<=cols; i++) {
 				a.add(rs.getString(i));
 			}

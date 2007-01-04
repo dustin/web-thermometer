@@ -85,7 +85,7 @@ public class Sensor extends Object implements java.io.Serializable {
 	 * @exception Exception when DB problems arrise
 	 */
 	public static Collection<Sensor> getSensors() throws Exception {
-		List<Sensor> l=new ArrayList(8);
+		List<Sensor> l=new ArrayList<Sensor>(8);
 		SpyDB db=new SpyDB(TempConf.getInstance());
 		ResultSet rs=db.executeQuery("select * from sensors order by name");
 
@@ -101,6 +101,7 @@ public class Sensor extends Object implements java.io.Serializable {
 	/**
 	 * Printable representation of this object.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer();
 		sb.append(sensor_id);

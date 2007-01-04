@@ -34,18 +34,18 @@ public class WapReport extends JWHttpServlet {
 	}
 
 	private String getWml() throws ServletException {
-		Map<String, List<Stat>> stats=new HashMap();
-		TreeMap<String, String> nameMap=new TreeMap();
-		Map<String, String> nameMapRev=new HashMap();
+		Map<String, List<Stat>> stats=new HashMap<String, List<Stat>>();
+		TreeMap<String, String> nameMap=new TreeMap<String, String>();
+		Map<String, String> nameMapRev=new HashMap<String, String>();
 
 		try {
 			SummaryByDay sbd=new SummaryByDay(TempConf.getInstance());
 			ResultSet rs=sbd.executeQuery();
 			while(rs.next()) {
 				Stat s=new Stat(rs);
-				List l=stats.get(s.sn);
+				List<Stat> l=stats.get(s.sn);
 				if(l == null) {
-					l=new ArrayList();
+					l=new ArrayList<Stat>();
 					stats.put(s.sn, l);
 				}
 				l.add(s);
@@ -71,7 +71,7 @@ public class WapReport extends JWHttpServlet {
 		sb.append(sdf.format(new java.util.Date()));
 		sb.append("<br/>\n");
 
-		for(Map.Entry me : nameMap.entrySet()) {
+		for(Map.Entry<String, String> me : nameMap.entrySet()) {
 			sb.append("<a href=\"#s" + me.getValue() + "\">"
 				+ me.getKey() + "</a><br/>\n");
 		}
@@ -109,6 +109,7 @@ public class WapReport extends JWHttpServlet {
 	/** 
 	 * Process this request.
 	 */
+	@Override
 	protected void doGetOrPost(HttpServletRequest req,
 		HttpServletResponse res) throws ServletException, IOException {
 

@@ -52,8 +52,9 @@ public class Gatherer extends SpyThread {
 
 		this.group=grp;
 		getLogger().info("Initializing gatherer on " + grp + ":" + prt);
-		seen=Collections.synchronizedMap(new TreeMap());
-		history=Collections.synchronizedMap(new TreeMap());
+		seen=Collections.synchronizedMap(new TreeMap<String, Sample>());
+		history=Collections.synchronizedMap(
+				new TreeMap<String, LinkedList<Sample>>());
 		// Serial number -> name mapping
 		serials=ResourceBundle.getBundle("net.spy.temperature.therms");
 
@@ -80,6 +81,7 @@ public class Gatherer extends SpyThread {
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer(128);
 
@@ -148,8 +150,8 @@ public class Gatherer extends SpyThread {
 	 * @return an unmodifiable List of Sample objects
 	 */
 	public List<Sample> getHistory(String name) {
-		List<Sample> rv=Collections.EMPTY_LIST;
-		List hist=history.get(name);
+		List<Sample> rv=Collections.emptyList();
+		List<Sample> hist=history.get(name);
 		if(hist != null) {
 			rv=Collections.unmodifiableList(hist);
 		}
@@ -198,9 +200,9 @@ public class Gatherer extends SpyThread {
 		sample.setSample(sample_val);
 
 		// Also store the history
-		LinkedList readingHistory=history.get(key);
+		LinkedList<Sample> readingHistory=history.get(key);
 		if(readingHistory == null) {
-			readingHistory=new LinkedList();
+			readingHistory=new LinkedList<Sample>();
 			history.put(key, readingHistory);
 		}
 		Sample tmps=new Sample(key, sample_val);
@@ -214,10 +216,11 @@ public class Gatherer extends SpyThread {
 
 	// Clean up any old entries
 	private void cleanup() {
-		for(Iterator i=seen.entrySet().iterator(); i.hasNext(); ) {
-			Map.Entry me=(Map.Entry)i.next();
+		for(Iterator<Map.Entry<String, Sample>> i=seen.entrySet().iterator();
+			i.hasNext(); ) {
+			Map.Entry<String, Sample> me=i.next();
 
-			Sample s=(Sample)me.getValue();
+			Sample s=me.getValue();
 			if(s.age() > MAX_AGE) {
 				getLogger().warn("Removing old entry:  " + s);
 				i.remove();
@@ -230,6 +233,7 @@ public class Gatherer extends SpyThread {
 	/** 
 	 * Watch for incoming temperature updates and record them.
 	 */
+	@Override
 	public void run() {
 		while(running) {
 			try {
