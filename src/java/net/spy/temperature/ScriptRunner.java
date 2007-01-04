@@ -6,18 +6,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.util.Date;
+import java.util.TimerTask;
 
-import net.spy.cron.Job;
-import net.spy.cron.TimeIncrement;
 import net.spy.db.SQLRunner;
 import net.spy.db.SpyDB;
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
 import net.spy.util.SpyConfig;
 
 /**
  * Nightly job to clean up the DB and stuff.
  */
-public class ScriptRunner extends Job {
+public class ScriptRunner extends TimerTask {
 
 	private String path=null;
 	private SpyConfig conf=null;
@@ -25,8 +25,8 @@ public class ScriptRunner extends Job {
 	/**
 	 * Get an instance of Nightly.
 	 */
-	public ScriptRunner(String name, Date d, TimeIncrement ti, String filePath) {
-		super(name, d, ti);
+	public ScriptRunner(String name, String filePath) {
+		super();
 		this.path=filePath;
 		conf=TempConf.getInstance();
 	}
@@ -44,9 +44,11 @@ public class ScriptRunner extends Job {
 	/** 
 	 * Run the job.
 	 */
-	public void runJob() {
+	@Override
+	public void run() {
+		Logger logger=LoggerFactory.getLogger(getClass());
 		try {
-			getLogger().info("Running nightly script.");
+			logger.info("Running nightly script.");
 			SpyDB db=new SpyDB(conf);
 			Connection conn=db.getConn();
 			SQLRunner sr=new SQLRunner(conn);
@@ -54,7 +56,7 @@ public class ScriptRunner extends Job {
 			sr.runScript(is);
 			is.close();
 		} catch(Exception e) {
-			getLogger().warn("Problem running job", e);
+			logger.warn("Problem running job", e);
 		}
 	}
 

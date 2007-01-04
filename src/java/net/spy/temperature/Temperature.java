@@ -15,16 +15,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
+import java.util.Timer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.cron.Cron;
-import net.spy.cron.JobQueue;
-import net.spy.cron.TimeIncrement;
 import net.spy.png.ImageLoader;
 import net.spy.png.PngServlet;
 import net.spy.png.StupidImageObserver;
@@ -38,7 +37,7 @@ public class Temperature extends PngServlet {
 	// shared gatherer instance
 	static Gatherer gatherer=null;
 
-	private Cron cron=null;
+	private Timer timer=null;
 
 	// Image stuff.
 	private Image baseImage=null;
@@ -66,16 +65,12 @@ public class Temperature extends PngServlet {
 		font=new Font("SanSerif", Font.PLAIN, 10);
 
 		// Set up the cron.
-		cron=new Cron(new JobQueue());
+		timer=new Timer("Temperature Timer", true);
 
 		setupJobs();
 	}
 
 	private void setupJobs() {
-		TimeIncrement ti=new TimeIncrement();
-		// Do this every day...
-		ti.setField(Calendar.DAY_OF_MONTH);
-		ti.setIncrement(1);
 		// ...at the same time
 		Calendar cal=Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 2);
@@ -87,8 +82,9 @@ public class Temperature extends PngServlet {
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 
 		log("Queueing nightly job starting at " + cal.getTime());
-		cron.getJobQueue().addJob(new ScriptRunner("nightly rollup",
-			cal.getTime(), ti, NIGHTLY_SQL));
+		timer.scheduleAtFixedRate(
+				new ScriptRunner("nightly rollup", NIGHTLY_SQL),
+			cal.getTime(), 86400000);
 	}
 
 	/** 
@@ -97,7 +93,7 @@ public class Temperature extends PngServlet {
 	public void destroy() {
 		log("Shutting down gatherer.");
 		gatherer.stopRunning();
-		cron.shutdown();
+		timer.cancel();
 		super.destroy();
 	}
 
