@@ -24,6 +24,11 @@
 		</init-param>
 	</filter>
 
+	<filter>
+		<filter-name>simpleCacheFilter</filter-name>
+		<filter-class>net.spy.jwebkit.SimpleCacheFilter</filter-class>
+	</filter>
+
 	<filter-mapping>
 		<filter-name>hourCacheControl</filter-name>
 		<url-pattern>/WapReport</url-pattern>
@@ -32,6 +37,11 @@
 	<filter-mapping>
 		<filter-name>fiveMinuteCacheControl</filter-name>
 		<url-pattern>/Temperature</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>simpleCacheFilter</filter-name>
+		<url-pattern>/House</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
