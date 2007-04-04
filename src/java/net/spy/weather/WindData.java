@@ -43,6 +43,7 @@ public class WindData extends WeatherData {
 		speed_unit=towhat;
 	}
 
+	@Override
 	public String toString() {
 		NumberFormat nf=NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);

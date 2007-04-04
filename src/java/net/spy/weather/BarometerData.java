@@ -63,6 +63,7 @@ public class BarometerData extends WeatherData {
 		return(p);
 	}
 
+	@Override
 	public String toString() {
 		NumberFormat nf=NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);

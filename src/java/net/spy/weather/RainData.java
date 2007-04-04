@@ -35,6 +35,7 @@ public class RainData extends WeatherData {
 	/**
 	 * Get the current rate of rain.
 	 */
+	@Override
 	public String toString() {
 		NumberFormat nf=NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);

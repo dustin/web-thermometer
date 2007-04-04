@@ -104,6 +104,7 @@ public class WMReader extends InputStream {
 	/**
 	 * Return a byte from our host input stream.
 	 */
+	@Override
 	public int read() throws IOException {
 		return(stream.read());
 	}

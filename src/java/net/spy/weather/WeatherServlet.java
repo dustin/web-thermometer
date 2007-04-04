@@ -21,6 +21,7 @@ public class WeatherServlet extends JWHttpServlet {
 	protected WeatherMonitor wm=null;
 
 	// The once only init thingy.
+	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		String server=config.getInitParameter("server");
@@ -36,6 +37,7 @@ public class WeatherServlet extends JWHttpServlet {
 	}
 
 	// The occasional destroy.
+	@Override
 	public void destroy() {
 		wm.requestStop();
 		wm=null;

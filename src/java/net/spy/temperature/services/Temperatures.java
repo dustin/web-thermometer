@@ -6,7 +6,6 @@ package net.spy.temperature.services;
 
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -32,18 +31,17 @@ public class Temperatures extends Remote {
 	/**
 	 * List all known thermometers.
 	 */
-	public Vector listTherms() throws Exception {
-		return(new Vector(gatherer.getSeen().keySet()));
+	public Vector<String> listTherms() throws Exception {
+		return(new Vector<String>(gatherer.getSeen().keySet()));
 	}
 
 	/**
 	 * Get all temperatures from all thermometers.
 	 */
-	public Hashtable getTemperatures() throws Exception {
-		Hashtable ht=new Hashtable();
-		for(Iterator i=gatherer.getSeen().entrySet().iterator(); i.hasNext();) {
-			Map.Entry me=(Map.Entry)i.next();
-			Sample s=(Sample)me.getValue();
+	public Hashtable<String, Double> getTemperatures() throws Exception {
+		Hashtable<String, Double> ht=new Hashtable<String, Double>();
+		for(Map.Entry<String, Sample> me : gatherer.getSeen().entrySet()) {
+			Sample s=me.getValue();
 			ht.put(me.getKey(), s.getSample());
 		}
 		return(ht);

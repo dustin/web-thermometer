@@ -132,6 +132,7 @@ public class WeatherMonitor extends LoopingThread {
 		return(rv.toString());
 	}
 
+	@Override
 	protected void runLoop() {
 		try {
 			WeatherData wd=wx200d.readGroup();

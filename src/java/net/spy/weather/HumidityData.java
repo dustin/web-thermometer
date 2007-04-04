@@ -24,6 +24,7 @@ public class HumidityData extends WeatherData {
 	/**
 	 * Get a printable representation of the humidity data.
 	 */
+	@Override
 	public String toString() {
 		NumberFormat nf=NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);

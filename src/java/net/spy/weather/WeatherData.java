@@ -42,7 +42,7 @@ public class WeatherData extends Object {
 	public static final int TIME = 0xff;
 
 	// Data types
-	protected static Map types = null;
+	protected static Map<Integer, String> types = null;
 
 	/**
 	 * Celsius unit for temperature.
@@ -70,9 +70,9 @@ public class WeatherData extends Object {
 		initDataTypes();
 	}
 
+	@Override
 	public String toString() {
-		String type_str = (String) types.get(new Integer(type));
-		return (type_str);
+		return types.get(type);
 	}
 
 	// Binary coded decimal decoder.
@@ -89,7 +89,7 @@ public class WeatherData extends Object {
 	}
 
 	protected static synchronized void initDataTypes() {
-		types = new HashMap();
+		types = new HashMap<Integer, String>();
 
 		types.put(new Integer(0x8f), "Time and Humidity");
 		types.put(new Integer(0x9f), "Temperature");

@@ -21,6 +21,7 @@ public class TemperatureData extends WeatherData {
 		}
 	}
 
+	@Override
 	public String toString() {
 		NumberFormat nf = NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);
