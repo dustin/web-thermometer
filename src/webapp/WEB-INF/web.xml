@@ -43,6 +43,11 @@
 	</filter-mapping>
 
 	<filter-mapping>
+		<filter-name>cacheFilter</filter-name>
+		<url-pattern>/Temperature</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
 		<filter-name>fiveMinuteCacheControl</filter-name>
 		<url-pattern>/Temperature</url-pattern>
 	</filter-mapping>
