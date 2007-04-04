@@ -111,7 +111,7 @@ public class Temperature extends PngServlet {
 
 	// Do a GET request
 	@Override
-	public void doGetOrPost (
+	public void doGet(
 		HttpServletRequest request, HttpServletResponse response
 	) throws ServletException, IOException {
 

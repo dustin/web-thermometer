@@ -5,8 +5,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="MAVEN_REPO/acme/jars/acme-1.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xmlrpc/jars/xmlrpc-2.0.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/spy-2.1.105.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/jwebkit-2.1.37.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/spy-2.2.56.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/jwebkit-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/spyxmlrpc-2.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/pngservlet-1.0.2.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/postgresql/jars/postgresql-7.4.1-jdbc3.jar"/>

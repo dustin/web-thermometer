@@ -25,8 +25,16 @@
 	</filter>
 
 	<filter>
-		<filter-name>simpleCacheFilter</filter-name>
-		<filter-class>net.spy.jwebkit.SimpleCacheFilter</filter-class>
+		<filter-name>cacheFilter</filter-name>
+		<filter-class>net.spy.jwebkit.cache.CacheFilter</filter-class>
+		<init-param>
+			<param-name>cacheProvider</param-name>
+			<param-value>net.spy.jwebkit.cache.MemcachedCacheProvider</param-value>
+		</init-param>
+		<init-param>
+			<param-name>memcached.servers</param-name>
+			<param-value>purple:11211 red:11211</param-value>
+		</init-param>
 	</filter>
 
 	<filter-mapping>
@@ -40,7 +48,7 @@
 	</filter-mapping>
 
 	<filter-mapping>
-		<filter-name>simpleCacheFilter</filter-name>
+		<filter-name>cacheFilter</filter-name>
 		<url-pattern>/House</url-pattern>
 	</filter-mapping>
 

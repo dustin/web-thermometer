@@ -110,7 +110,7 @@ public class WapReport extends JWHttpServlet {
 	 * Process this request.
 	 */
 	@Override
-	protected void doGetOrPost(HttpServletRequest req,
+	protected void doGet(HttpServletRequest req,
 		HttpServletResponse res) throws ServletException, IOException {
 
 		res.setContentType("text/vnd.wap.wml");
