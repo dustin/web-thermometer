@@ -1,0 +1,7 @@
+(^|/)\_darcs($|/)
+(^|/)\.hg($|/)
+(^|/)\.hgtags($|/)
+^temperatures.log$
+^temperatures.state$
+^temperatures.state.old$
+^temperatures.state.journal$
