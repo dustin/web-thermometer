@@ -1,8 +1,0 @@
-(^|/)\_darcs($|/)
-(^|/)\.hg($|/)
-(^|/)\.hgtags($|/)
-^target($|/)$
-^temperatures.log$
-^temperatures.state$
-^temperatures.state.old$
-^temperatures.state.journal$
