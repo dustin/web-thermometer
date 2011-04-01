@@ -33,7 +33,7 @@
 		</init-param>
 		<init-param>
 			<param-name>memcached.servers</param-name>
-			<param-value>red:11211</param-value>
+			<param-value>memcached:11211</param-value>
 		</init-param>
 	</filter>
 
