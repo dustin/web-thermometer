@@ -1,0 +1,107 @@
+{
+    "colorize": [
+        "garage",
+        "machineroom",
+        "livingroom",
+        "guestroom",
+        "bedroom",
+        "jennalynn"
+    ],
+    "dims": {
+        "h": 193,
+        "w": 272
+    },
+    "maxRelevantDistance": 100,
+    "rooms": {
+        "bedroom": {
+            "max": 29,
+            "min": 11,
+            "rect": {
+                "h": 65,
+                "w": 78,
+                "x": 4,
+                "y": 124
+            },
+            "therm": {
+                "x": 7,
+                "y": 127
+            }
+        },
+        "garage": {
+            "max": 40,
+            "min": 10,
+            "reading": {
+                "y": 19
+            },
+            "rect": {
+                "h": 116,
+                "w": 69,
+                "x": 4,
+                "y": 4
+            },
+            "spark": {
+                "y": 27
+            },
+            "therm": {
+                "x": 8,
+                "y": 87
+            }
+        },
+        "guestroom": {
+            "max": 25,
+            "min": 15,
+            "rect": {
+                "h": 62,
+                "w": 65,
+                "x": 203,
+                "y": 127
+            },
+            "therm": {
+                "x": 206,
+                "y": 186
+            }
+        },
+        "jennalynn": {
+            "max": 30,
+            "min": 10,
+            "rect": {
+                "h": 65,
+                "w": 57,
+                "x": 108,
+                "y": 124
+            },
+            "therm": {
+                "x": 160,
+                "y": 150
+            }
+        },
+        "livingroom": {
+            "max": 29,
+            "min": 15,
+            "rect": {
+                "h": 74,
+                "w": 112,
+                "x": 156,
+                "y": 33
+            },
+            "therm": {
+                "x": 263,
+                "y": 45
+            }
+        },
+        "machineroom": {
+            "max": 26,
+            "min": 15,
+            "rect": {
+                "h": 50,
+                "w": 50,
+                "x": 4,
+                "y": 46
+            },
+            "therm": {
+                "x": 5,
+                "y": 75
+            }
+        }
+    }
+}
