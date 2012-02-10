@@ -10,10 +10,12 @@ import (
 )
 
 var houseBase image.Image
+var numbersImage image.Image
+
 var conf houseConfig
 
-func loadBaseImage() {
-	f, err := os.Open("house.png")
+func loadImage(name string) image.Image {
+	f, err := os.Open(name)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,7 +24,7 @@ func loadBaseImage() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	houseBase = i
+	return i
 }
 
 func loadConfig() {
@@ -38,7 +40,8 @@ func loadConfig() {
 }
 
 func main() {
-	loadBaseImage()
+	houseBase = loadImage("house.png")
+	numbersImage = loadImage("numbers.png")
 	loadConfig()
 
 	addr := ":7777"

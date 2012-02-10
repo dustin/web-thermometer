@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -70,12 +71,26 @@ func fillGradient(img *image.NRGBA, room room, reading float64) {
 				relevance = 0
 			}
 
-			if distance < conf.MaxRelevantDistance {
-				img.Set(px, py, getFillColor(room, reading, relevance))
-			} else {
-				img.Set(px, py, color.White)
-			}
+			img.Set(px, py, getFillColor(room, reading, relevance))
 		}
+	}
+}
+
+func drawLabel(i draw.Image, room room, lbl string) {
+	charmap := map[rune]int{'0': 3, '1': 18, '2': 33, '3': 47, '4': 60,
+		'5': 75, '6': 87, '7': 102, '8': 116, '9': 130, '.': 144,
+		'?': 158, 'X': 173}
+	charwidth := 7
+	charheight := 12
+
+	x := ifZero(room.Reading.X, (room.Rect.X + (room.Rect.W / 2) -
+		((len(lbl) * charwidth) / 2)))
+	y := ifZero(room.Reading.Y, (room.Rect.Y +
+		((room.Rect.H - charheight*2) / 2) + 4))
+	for _, c := range lbl {
+		draw.Draw(i, image.Rect(x, y, x+charwidth+1, y+charheight),
+			numbersImage, image.Pt(charmap[c], 0), draw.Over)
+		x += charwidth
 	}
 }
 
@@ -89,7 +104,9 @@ func houseServer(w http.ResponseWriter, req *http.Request) {
 	for _, roomName := range conf.Colorize {
 		room := conf.Rooms[roomName]
 		drawBox(i, room)
-		fillGradient(i, room, 15.79)
+		reading := 31.13
+		fillGradient(i, room, reading)
+		drawLabel(i, room, fmt.Sprintf("%.2f", reading))
 	}
 
 	png.Encode(w, i)
