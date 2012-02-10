@@ -43,12 +43,6 @@ func drawBox(i *image.NRGBA, room *room) {
 		image.NewUniform(color.Black),
 		image.Pt(room.Rect.X-1, room.Rect.Y-1),
 		draw.Over)
-	draw.Draw(i, image.Rect(room.Rect.X, room.Rect.Y,
-		room.Rect.X+room.Rect.W,
-		room.Rect.Y+room.Rect.H),
-		image.NewUniform(color.White),
-		image.Pt(room.Rect.X, room.Rect.Y),
-		draw.Over)
 }
 
 func ifZero(a, b int) int {
@@ -59,32 +53,25 @@ func ifZero(a, b int) int {
 }
 
 func getFillColor(room *room, reading, relevance float64) (rv color.NRGBA) {
-	switch {
-	case reading < room.Min:
-		rv = color.NRGBA{0, 0, 255, 255}
-	case reading > room.Max:
-		rv = color.NRGBA{255, 0, 0, 255}
-	default:
-		normal := room.Min + ((room.Max - room.Min) / 2.0)
-		maxDifference := room.Max - room.Min
+	normal := room.Min + ((room.Max - room.Min) / 2.0)
+	maxDifference := room.Max - room.Min
 
-		difference := math.Abs(reading - normal)
-		differencePercent := difference / maxDifference
+	difference := math.Abs(reading - normal)
+	differencePercent := difference / maxDifference
 
-		factor := 1.0 - relevance
+	factor := 1.0 - relevance
 
-		base := 255.0 - (255.0 * differencePercent)
-		colorval := uint8(base + ((255 - base) * factor))
+	base := 255.0 - (255.0 * differencePercent)
+	colorval := uint8(base + ((255 - base) * factor))
 
-		rv.A = 255
-		rv.R = uint8(colorval)
-		rv.G = rv.R
-		rv.B = rv.R
-		if reading > normal {
-			rv.R = 255
-		} else {
-			rv.B = 255
-		}
+	rv.A = 255
+	rv.R = uint8(colorval)
+	rv.G = rv.R
+	rv.B = rv.R
+	if reading > normal {
+		rv.R = 255
+	} else {
+		rv.B = 255
 	}
 	return
 }
@@ -105,6 +92,26 @@ func fillGradient(img *image.NRGBA, room *room, reading float64) {
 
 			img.Set(px, py, getFillColor(room, reading, relevance))
 		}
+	}
+}
+
+func fillSolid(i *image.NRGBA, room *room, c color.Color) {
+	draw.Draw(i, image.Rect(room.Rect.X, room.Rect.Y,
+		room.Rect.X+room.Rect.W,
+		room.Rect.Y+room.Rect.H),
+		image.NewUniform(c),
+		image.Pt(room.Rect.X, room.Rect.Y),
+		draw.Over)
+}
+
+func fill(i *image.NRGBA, room *room, reading float64) {
+	switch {
+	case reading < room.Min:
+		fillSolid(i, room, color.NRGBA{0, 0, 255, 255})
+	case reading > room.Max:
+		fillSolid(i, room, color.NRGBA{255, 0, 0, 255})
+	default:
+		fillGradient(i, room, reading)
 	}
 }
 
@@ -182,10 +189,11 @@ func houseServer(w http.ResponseWriter, req *http.Request) {
 		roomReadings, ok := alldata[room.SN]
 		if ok {
 			reading := roomReadings[0].reading
-			fillGradient(i, room, reading)
+			fill(i, room, reading)
 			drawLabel(i, room, fmt.Sprintf("%.2f", reading))
 			drawSparklines(i, room, roomReadings)
 		} else {
+			fillSolid(i, room, color.White)
 			drawLabel(i, room, "??.??")
 		}
 	}
