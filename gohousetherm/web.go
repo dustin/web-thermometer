@@ -23,16 +23,6 @@ func drawBox(i *image.NRGBA, room *room) {
 		image.NewUniform(color.White),
 		image.Pt(room.Rect.X, room.Rect.Y),
 		draw.Over)
-	/*
-		for x := -1; x <= room.Rect.W; x++ {
-			i.Set(room.Rect.X+x, room.Rect.Y-1, color.Black)
-			i.Set(room.Rect.X+x, room.Rect.Y+room.Rect.H, color.Black)
-		}
-		for y := -1; y <= room.Rect.H; y++ {
-			i.Set(room.Rect.X-1, room.Rect.Y+y, color.Black)
-			i.Set(room.Rect.X+room.Rect.W, room.Rect.Y+y, color.Black)
-		}
-	*/
 }
 
 func ifZero(a, b int) int {
