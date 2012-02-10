@@ -46,7 +46,6 @@ func (rs *readings) processReadings() {
 	for {
 		select {
 		case r := <-rs.input:
-			log.Printf("processor read %#v", r)
 			rs.current[r.sensor] = r
 			rng := rs.previous[r.sensor]
 			if rng == nil {
@@ -55,14 +54,7 @@ func (rs *readings) processReadings() {
 			rng = rng.Prev()
 			rng.Value = r
 			rs.previous[r.sensor] = rng
-
-			rng.Do(func(x interface{}) {
-				if x != nil {
-					log.Printf("  have %v", x)
-				}
-			})
 		case r := <-rs.req:
-			log.Printf("Request for a dump.")
 			response := make(map[string][]reading)
 			for k, v := range rs.previous {
 				stuff := []reading{}
