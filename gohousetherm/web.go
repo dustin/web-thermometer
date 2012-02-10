@@ -11,13 +11,13 @@ import (
 )
 
 func drawBox(i *image.NRGBA, room room) {
-	for x := -1; x < room.Rect.W+2; x++ {
+	for x := -1; x <= room.Rect.W; x++ {
 		i.Set(room.Rect.X+x, room.Rect.Y-1, color.Black)
-		i.Set(room.Rect.X+x, room.Rect.Y+room.Rect.H+1, color.Black)
+		i.Set(room.Rect.X+x, room.Rect.Y+room.Rect.H, color.Black)
 	}
-	for y := -1; y < room.Rect.H+2; y++ {
+	for y := -1; y <= room.Rect.H; y++ {
 		i.Set(room.Rect.X-1, room.Rect.Y+y, color.Black)
-		i.Set(room.Rect.X+room.Rect.W+1, room.Rect.Y+y, color.Black)
+		i.Set(room.Rect.X+room.Rect.W, room.Rect.Y+y, color.Black)
 	}
 }
 
@@ -45,9 +45,9 @@ func getFillColor(room room, reading, relevance float64) (rv color.NRGBA) {
 
 		colorval := uint8(255 * factor)
 		rv.A = 255
-		rv.R = colorval
-		rv.G = colorval
-		rv.B = colorval
+		rv.R = uint8(math.Max(192, float64(colorval)))
+		rv.G = rv.R
+		rv.B = rv.R
 		if reading > normal {
 			rv.R = 255
 		} else {
@@ -61,8 +61,8 @@ func fillGradient(img *image.NRGBA, room room, reading float64) {
 	tx := ifZero(room.Therm.X, room.Rect.X+(room.Rect.W/2))
 	ty := ifZero(room.Therm.Y, room.Rect.Y+(room.Rect.H/2))
 
-	for i := 0; i <= room.Rect.W; i++ {
-		for j := 0; j <= room.Rect.H; j++ {
+	for i := 0; i < room.Rect.W; i++ {
+		for j := 0; j < room.Rect.H; j++ {
 			px, py := room.Rect.X+i, room.Rect.Y+j
 			xd, yd := float64(px-tx), float64(py-ty)
 			distance := math.Sqrt(xd*xd + yd*yd)
@@ -104,7 +104,7 @@ func houseServer(w http.ResponseWriter, req *http.Request) {
 	for _, roomName := range conf.Colorize {
 		room := conf.Rooms[roomName]
 		drawBox(i, room)
-		reading := 31.13
+		reading := 22.94
 		fillGradient(i, room, reading)
 		drawLabel(i, room, fmt.Sprintf("%.2f", reading))
 	}
