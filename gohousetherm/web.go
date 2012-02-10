@@ -10,11 +10,6 @@ import (
 )
 
 func drawBox(i *image.NRGBA, room room) {
-	for x := 0; x < room.Rect.W; x++ {
-		for y := 0; y < room.Rect.H; y++ {
-			i.Set(room.Rect.X+x, room.Rect.Y+y, color.White)
-		}
-	}
 	for x := -1; x < room.Rect.W+2; x++ {
 		i.Set(room.Rect.X+x, room.Rect.Y-1, color.Black)
 		i.Set(room.Rect.X+x, room.Rect.Y+room.Rect.H+1, color.Black)
