@@ -6,9 +6,35 @@ import (
 	"image/color"
 	"image/draw"
 	"image/png"
+	"io/ioutil"
+	"log"
 	"math"
 	"net/http"
+	"os"
+	"path/filepath"
+
+	"code.google.com/p/freetype-go/freetype"
+	"code.google.com/p/freetype-go/freetype/truetype"
 )
+
+var font *truetype.Font
+
+func init() {
+	fontPath := os.Getenv("TEMPWEB_FONT")
+	if fontPath == "" {
+		goPath := os.Getenv("GOPATH")
+		fontPath = filepath.Join(goPath,
+			"src/code.google.com/p/freetype-go/luxi-fonts/luximr.ttf")
+	}
+	fontBytes, err := ioutil.ReadFile(fontPath)
+	if err != nil {
+		log.Fatalf("Error loading font (try setting TEMPWEB_FONT): %v", err)
+	}
+	font, err = freetype.ParseFont(fontBytes)
+	if err != nil {
+		log.Fatalf("Error parsing font: %v", err)
+	}
+}
 
 func drawBox(i *image.NRGBA, room *room) {
 	draw.Draw(i, image.Rect(room.Rect.X-1, room.Rect.Y-1,
@@ -83,21 +109,24 @@ func fillGradient(img *image.NRGBA, room *room, reading float64) {
 }
 
 func drawLabel(i draw.Image, room *room, lbl string) {
-	charmap := map[rune]int{'0': 4, '1': 18, '2': 33, '3': 47, '4': 60,
-		'5': 75, '6': 87, '7': 102, '8': 116, '9': 130, '.': 144,
-		'?': 158, 'X': 173}
-	charwidth := 8
+	charwidth := 6
 	charheight := 12
 
 	x := ifZero(room.Reading.X, (room.Rect.X + (room.Rect.W / 2) -
 		((len(lbl) * charwidth) / 2)))
 	y := ifZero(room.Reading.Y, (room.Rect.Y +
 		((room.Rect.H - charheight*2) / 2) + 4))
-	for _, c := range lbl {
-		draw.Draw(i, image.Rect(x, y, x+charwidth+1, y+charheight),
-			numbersImage, image.Pt(charmap[c], 0), draw.Over)
-		x += charwidth
-	}
+
+	c := freetype.NewContext()
+	c.SetDPI(72)
+	c.SetFont(font)
+	c.SetFontSize(10)
+	c.SetClip(image.Rect(x, y, x+room.Rect.W, y+charheight))
+	c.SetDst(i)
+	c.SetSrc(image.Black)
+
+	pt := freetype.Pt(x, y+c.FUnitToPixelRU(font.UnitsPerEm()))
+	c.DrawString(lbl, pt)
 }
 
 func houseServer(w http.ResponseWriter, req *http.Request) {

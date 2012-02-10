@@ -11,7 +11,6 @@ import (
 )
 
 var houseBase image.Image
-var numbersImage image.Image
 
 var conf houseConfig
 var bySerial map[string]*room
@@ -59,7 +58,6 @@ func serveWeb(addr string) {
 
 func main() {
 	houseBase = loadImage("house.png")
-	numbersImage = loadImage("numbers.png")
 	loadConfig()
 
 	ch, err := readNet()
