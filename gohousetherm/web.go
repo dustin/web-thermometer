@@ -192,3 +192,9 @@ func houseServer(w http.ResponseWriter, req *http.Request) {
 
 	png.Encode(w, i)
 }
+
+func serveWeb(addr string) {
+	http.HandleFunc("/", houseServer)
+	log.Printf("Listening to web requests on %s", addr)
+	log.Fatal(http.ListenAndServe(addr, nil))
+}
