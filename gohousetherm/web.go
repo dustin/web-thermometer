@@ -135,7 +135,6 @@ func drawSparklines(i *image.NRGBA, room *room, roomReadings []reading) {
 		return
 	}
 
-	sparkw := ifZero(room.Spark.W, room.Rect.W)
 	sparkh := ifZero(room.Spark.H, 20)
 	sparkx := ifZero(room.Spark.X, room.Rect.X)
 	sparky := ifZero(room.Spark.Y, (room.Rect.Y+room.Rect.H)-sparkh)
@@ -153,13 +152,8 @@ func drawSparklines(i *image.NRGBA, room *room, roomReadings []reading) {
 		high = avg - (float64(sparkh) / 2.0)
 	}
 
-	numPoints := len(roomReadings)
-	if numPoints >= sparkw {
-		numPoints = sparkw
-	}
-
 	for pos, r := range roomReadings {
-		x := numPoints - pos + sparkx
+		x := len(roomReadings) - pos + sparkx
 		heightPercent := (r.reading - low) / (high - low)
 		y := int((float64(sparky) + float64(sparkh)) - (float64(sparkh) * heightPercent))
 		if y > sparky+sparkh {

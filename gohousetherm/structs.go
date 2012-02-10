@@ -32,6 +32,13 @@ type room struct {
 	latest float64
 }
 
+func (r *room) sparkWidth() int {
+	if r.Spark.W != 0 {
+		return r.Spark.W
+	}
+	return r.Rect.W
+}
+
 type houseConfig struct {
 	Dims struct {
 		H int
