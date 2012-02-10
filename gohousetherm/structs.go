@@ -17,6 +17,8 @@ type room struct {
 	Spark struct {
 		X int
 		Y int
+		W int
+		H int
 	}
 	Reading struct {
 		X int

@@ -115,7 +115,7 @@ func drawLabel(i draw.Image, room *room, lbl string) {
 	x := ifZero(room.Reading.X, (room.Rect.X + (room.Rect.W / 2) -
 		((len(lbl) * charwidth) / 2)))
 	y := ifZero(room.Reading.Y, (room.Rect.Y +
-		((room.Rect.H - charheight*2) / 2) + 4))
+		((room.Rect.H - charheight*2) / 2) - 12))
 
 	c := freetype.NewContext()
 	c.SetDPI(72)
@@ -127,6 +127,50 @@ func drawLabel(i draw.Image, room *room, lbl string) {
 
 	pt := freetype.Pt(x, y+c.FUnitToPixelRU(font.UnitsPerEm()))
 	c.DrawString(lbl, pt)
+}
+
+func drawSparklines(i *image.NRGBA, room *room, roomReadings []reading) {
+	// Not interested in plotting fewer than two points
+	if len(roomReadings) < 2 {
+		return
+	}
+
+	sparkw := ifZero(room.Spark.W, room.Rect.W)
+	sparkh := ifZero(room.Spark.H, 20)
+	sparkx := ifZero(room.Spark.X, room.Rect.X)
+	sparky := ifZero(room.Spark.Y, (room.Rect.Y+room.Rect.H)-sparkh)
+
+	high, low := math.SmallestNonzeroFloat64, math.MaxFloat64
+
+	for _, r := range roomReadings {
+		high = math.Max(high, r.reading)
+		low = math.Min(low, r.reading)
+	}
+
+	if (high - low) < float64(sparkh) {
+		avg := high - ((high - low) / 2.0)
+		low = avg + (float64(sparkh) / 2.0)
+		high = avg - (float64(sparkh) / 2.0)
+	}
+
+	numPoints := len(roomReadings)
+	if numPoints >= sparkw {
+		numPoints = sparkw
+	}
+
+	for pos, r := range roomReadings {
+		x := numPoints - pos + sparkx
+		heightPercent := (r.reading - low) / (high - low)
+		y := int((float64(sparky) + float64(sparkh)) - (float64(sparkh) * heightPercent))
+		if y > sparky+sparkh {
+			y = sparky + sparkh
+		}
+		if y < sparky {
+			y = sparky
+		}
+
+		i.Set(x, y, color.Gray{127})
+	}
 }
 
 func houseServer(w http.ResponseWriter, req *http.Request) {
@@ -141,11 +185,12 @@ func houseServer(w http.ResponseWriter, req *http.Request) {
 	for _, roomName := range conf.Colorize {
 		room := conf.Rooms[roomName]
 		drawBox(i, room)
-		something, ok := alldata[room.SN]
+		roomReadings, ok := alldata[room.SN]
 		if ok {
-			reading := something[0].reading
+			reading := roomReadings[0].reading
 			fillGradient(i, room, reading)
 			drawLabel(i, room, fmt.Sprintf("%.2f", reading))
+			drawSparklines(i, room, roomReadings)
 		} else {
 			drawLabel(i, room, "??.??")
 		}
