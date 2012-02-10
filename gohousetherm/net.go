@@ -1,7 +1,6 @@
 package main
 
 import (
-	"container/ring"
 	"log"
 	"net"
 	"strconv"
@@ -12,37 +11,7 @@ import (
 var timeInFormat string = "2006/01/02 15:04:05"
 var timeOutFormat string = "2006-01-02T15:04:05"
 
-var readingsSingleton readingServer
-
-func processReadings() {
-	for {
-		select {
-		case r := <-readingsSingleton.input:
-			readingsSingleton.current[r.sensor] = r
-			rng := readingsSingleton.previous[r.sensor]
-			if rng == nil {
-				rng = ring.New(100)
-			}
-			rng = rng.Prev()
-			rng.Value = r
-			readingsSingleton.previous[r.sensor] = rng
-		case r := <-readingsSingleton.req:
-			response := make(map[string][]reading)
-			for k, v := range readingsSingleton.previous {
-				stuff := []reading{}
-				v.Do(func(x interface{}) {
-					if x != nil {
-						stuff = append(stuff, x.(reading))
-					}
-				})
-				response[k] = stuff
-			}
-			r <- response
-		}
-	}
-}
-
-func read(s *net.UDPConn, ch chan reading) {
+func read(s *net.UDPConn) {
 	b := make([]byte, 256)
 	for {
 		n, e := s.Read(b)
@@ -69,7 +38,7 @@ func read(s *net.UDPConn, ch chan reading) {
 			sensor:  parts[1],
 			reading: f,
 		}
-		ch <- record
+		readingsSingleton.input <- record
 	}
 }
 
@@ -80,13 +49,10 @@ func readNet() error {
 			Port: 6789,
 		})
 
-	readingsSingleton = newReadingServer()
 	if err != nil {
 		return err
 	}
 
-	go processReadings()
-
-	go read(socket, readingsSingleton.input)
+	go read(socket)
 	return nil
 }

@@ -61,17 +61,3 @@ type readingServer struct {
 	input chan reading
 	req   chan chan response
 }
-
-func newReadingServer() (rv readingServer) {
-	rv.current = make(map[string]reading)
-	rv.previous = make(map[string]*ring.Ring)
-	rv.input = make(chan reading, 1000)
-	rv.req = make(chan chan response)
-	return
-}
-
-func (rs *readingServer) getReadings() response {
-	ch := make(chan response)
-	rs.req <- ch
-	return <-ch
-}
