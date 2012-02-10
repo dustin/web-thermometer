@@ -12,7 +12,7 @@ import (
 var timeInFormat string = "2006/01/02 15:04:05"
 var timeOutFormat string = "2006-01-02T15:04:05"
 
-var readingsSingleton readings
+var readingsSingleton readingServer
 
 func processReadings() {
 	for {
@@ -80,7 +80,7 @@ func readNet() error {
 			Port: 6789,
 		})
 
-	readingsSingleton = newReadings()
+	readingsSingleton = newReadingServer()
 	if err != nil {
 		return err
 	}

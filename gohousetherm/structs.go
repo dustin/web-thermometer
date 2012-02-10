@@ -54,15 +54,7 @@ func (r reading) TS() string {
 
 type response map[string][]reading
 
-func newReadings() (rv readings) {
-	rv.current = make(map[string]reading)
-	rv.previous = make(map[string]*ring.Ring)
-	rv.input = make(chan reading, 1000)
-	rv.req = make(chan chan response)
-	return
-}
-
-type readings struct {
+type readingServer struct {
 	current  map[string]reading
 	previous map[string]*ring.Ring
 
@@ -70,7 +62,15 @@ type readings struct {
 	req   chan chan response
 }
 
-func (rs *readings) getReadings() response {
+func newReadingServer() (rv readingServer) {
+	rv.current = make(map[string]reading)
+	rv.previous = make(map[string]*ring.Ring)
+	rv.input = make(chan reading, 1000)
+	rv.req = make(chan chan response)
+	return
+}
+
+func (rs *readingServer) getReadings() response {
 	ch := make(chan response)
 	rs.req <- ch
 	return <-ch
