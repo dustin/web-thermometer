@@ -59,7 +59,7 @@ func getFillColor(room *room, reading, relevance float64) (rv color.NRGBA) {
 
 		colorval := uint8(255 * factor)
 		rv.A = 255
-		rv.R = uint8(math.Max(192, float64(colorval)))
+		rv.R = uint8(math.Max(220, float64(colorval)))
 		rv.G = rv.R
 		rv.B = rv.R
 		if reading > normal {
