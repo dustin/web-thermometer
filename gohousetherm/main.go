@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/png"
 	"log"
+	"math"
 	"net/http"
 	"os"
 )
@@ -13,6 +14,7 @@ var houseBase image.Image
 var numbersImage image.Image
 
 var conf houseConfig
+var bySerial map[string]*room
 
 func loadImage(name string) image.Image {
 	f, err := os.Open(name)
@@ -37,6 +39,22 @@ func loadConfig() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	bySerial = make(map[string]*room)
+	for k, r := range conf.Rooms {
+		sn := r.SN
+		if sn == "" {
+			sn = k
+		}
+		bySerial[sn] = r
+		r.latest = math.NaN()
+	}
+}
+
+func serveWeb(addr string) {
+	http.HandleFunc("/", houseServer)
+	log.Printf("Listening to web requests on %s", addr)
+	log.Fatal(http.ListenAndServe(addr, nil))
 }
 
 func main() {
@@ -44,8 +62,17 @@ func main() {
 	numbersImage = loadImage("numbers.png")
 	loadConfig()
 
+	ch, err := readNet()
+	if err != nil {
+		log.Fatalf("Error reading the net:  %v", err)
+	}
+
 	addr := ":7777"
-	http.HandleFunc("/", houseServer)
-	log.Printf("Listening to web requests on %s", addr)
-	log.Fatal(http.ListenAndServe(addr, nil))
+	go serveWeb(addr)
+
+	log.Printf("Waiting for multicast thingies.")
+	for r := range ch {
+		log.Printf("Read %#v", r)
+		bySerial[r.sensor].latest = r.reading
+	}
 }

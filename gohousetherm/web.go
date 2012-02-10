@@ -10,15 +10,29 @@ import (
 	"net/http"
 )
 
-func drawBox(i *image.NRGBA, room room) {
-	for x := -1; x <= room.Rect.W; x++ {
-		i.Set(room.Rect.X+x, room.Rect.Y-1, color.Black)
-		i.Set(room.Rect.X+x, room.Rect.Y+room.Rect.H, color.Black)
-	}
-	for y := -1; y <= room.Rect.H; y++ {
-		i.Set(room.Rect.X-1, room.Rect.Y+y, color.Black)
-		i.Set(room.Rect.X+room.Rect.W, room.Rect.Y+y, color.Black)
-	}
+func drawBox(i *image.NRGBA, room *room) {
+	draw.Draw(i, image.Rect(room.Rect.X-1, room.Rect.Y-1,
+		room.Rect.X+room.Rect.W+1,
+		room.Rect.Y+room.Rect.H+1),
+		image.NewUniform(color.Black),
+		image.Pt(room.Rect.X-1, room.Rect.Y-1),
+		draw.Over)
+	draw.Draw(i, image.Rect(room.Rect.X, room.Rect.Y,
+		room.Rect.X+room.Rect.W,
+		room.Rect.Y+room.Rect.H),
+		image.NewUniform(color.White),
+		image.Pt(room.Rect.X, room.Rect.Y),
+		draw.Over)
+	/*
+		for x := -1; x <= room.Rect.W; x++ {
+			i.Set(room.Rect.X+x, room.Rect.Y-1, color.Black)
+			i.Set(room.Rect.X+x, room.Rect.Y+room.Rect.H, color.Black)
+		}
+		for y := -1; y <= room.Rect.H; y++ {
+			i.Set(room.Rect.X-1, room.Rect.Y+y, color.Black)
+			i.Set(room.Rect.X+room.Rect.W, room.Rect.Y+y, color.Black)
+		}
+	*/
 }
 
 func ifZero(a, b int) int {
@@ -28,7 +42,7 @@ func ifZero(a, b int) int {
 	return a
 }
 
-func getFillColor(room room, reading, relevance float64) (rv color.NRGBA) {
+func getFillColor(room *room, reading, relevance float64) (rv color.NRGBA) {
 	switch {
 	case reading < room.Min:
 		rv = color.NRGBA{0, 0, 255, 255}
@@ -57,7 +71,7 @@ func getFillColor(room room, reading, relevance float64) (rv color.NRGBA) {
 	return
 }
 
-func fillGradient(img *image.NRGBA, room room, reading float64) {
+func fillGradient(img *image.NRGBA, room *room, reading float64) {
 	tx := ifZero(room.Therm.X, room.Rect.X+(room.Rect.W/2))
 	ty := ifZero(room.Therm.Y, room.Rect.Y+(room.Rect.H/2))
 
@@ -76,11 +90,11 @@ func fillGradient(img *image.NRGBA, room room, reading float64) {
 	}
 }
 
-func drawLabel(i draw.Image, room room, lbl string) {
-	charmap := map[rune]int{'0': 3, '1': 18, '2': 33, '3': 47, '4': 60,
+func drawLabel(i draw.Image, room *room, lbl string) {
+	charmap := map[rune]int{'0': 4, '1': 18, '2': 33, '3': 47, '4': 60,
 		'5': 75, '6': 87, '7': 102, '8': 116, '9': 130, '.': 144,
 		'?': 158, 'X': 173}
-	charwidth := 7
+	charwidth := 8
 	charheight := 12
 
 	x := ifZero(room.Reading.X, (room.Rect.X + (room.Rect.W / 2) -
@@ -104,9 +118,13 @@ func houseServer(w http.ResponseWriter, req *http.Request) {
 	for _, roomName := range conf.Colorize {
 		room := conf.Rooms[roomName]
 		drawBox(i, room)
-		reading := 22.94
-		fillGradient(i, room, reading)
-		drawLabel(i, room, fmt.Sprintf("%.2f", reading))
+		reading := room.latest
+		if math.IsNaN(reading) {
+			drawLabel(i, room, "??.??")
+		} else {
+			fillGradient(i, room, reading)
+			drawLabel(i, room, fmt.Sprintf("%.2f", reading))
+		}
 	}
 
 	png.Encode(w, i)

@@ -1,6 +1,7 @@
 package main
 
 type room struct {
+	SN   string
 	Max  float64
 	Min  float64
 	Rect struct {
@@ -21,6 +22,7 @@ type room struct {
 		X int
 		Y int
 	}
+	latest float64
 }
 
 type houseConfig struct {
@@ -29,6 +31,6 @@ type houseConfig struct {
 		W int
 	}
 	MaxRelevantDistance float64
-	Rooms               map[string]room
+	Rooms               map[string]*room
 	Colorize            []string
 }
