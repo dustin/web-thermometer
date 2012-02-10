@@ -40,16 +40,18 @@ func getFillColor(room *room, reading, relevance float64) (rv color.NRGBA) {
 		rv = color.NRGBA{255, 0, 0, 255}
 	default:
 		normal := room.Min + ((room.Max - room.Min) / 2.0)
-		maxDistance := room.Max - room.Min
+		maxDifference := room.Max - room.Min
 
-		distance := math.Abs(reading - normal)
-		distancePercent := distance / maxDistance
+		difference := math.Abs(reading - normal)
+		differencePercent := difference / maxDifference
 
-		factor := math.Max(distancePercent, (1.0 - relevance))
+		factor := 1.0 - relevance
 
-		colorval := uint8(255 * factor)
+		base := 255.0 - (255.0 * differencePercent)
+		colorval := uint8(base + ((255 - base) * factor))
+
 		rv.A = 255
-		rv.R = uint8(math.Max(220, float64(colorval)))
+		rv.R = uint8(colorval)
 		rv.G = rv.R
 		rv.B = rv.R
 		if reading > normal {
