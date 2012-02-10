@@ -3,6 +3,7 @@ package main
 import (
 	"image"
 	"image/color"
+	"image/draw"
 	"image/png"
 	"math"
 	"net/http"
@@ -32,28 +33,30 @@ func ifZero(a, b int) int {
 }
 
 func getFillColor(room room, reading, relevance float64) (rv color.NRGBA) {
-	normal := room.Min + ((room.Max - room.Min) / 2.0)
-	maxDistance := room.Max - room.Min
 	switch {
 	case reading < room.Min:
 		rv = color.NRGBA{0, 0, 255, 255}
 	case reading > room.Max:
 		rv = color.NRGBA{255, 0, 0, 255}
 	default:
-		if reading > normal {
-			rv.R = 255
-		} else {
-			rv.B = 255
-		}
-		rv.A = 255
+		normal := room.Min + ((room.Max - room.Min) / 2.0)
+		maxDistance := room.Max - room.Min
+
 		distance := math.Abs(reading - normal)
 		distancePercent := distance / maxDistance
 
 		factor := math.Max(distancePercent, (1.0 - relevance))
 
-		h, _, _ := RGB2HSL(rv)
-		brightness := 0.9 + (factor / 10.0)
-		rv = HSL2RGB(h, relevance*distancePercent, brightness)
+		colorval := uint8(255 * factor)
+		rv.A = 255
+		rv.R = colorval
+		rv.G = colorval
+		rv.B = colorval
+		if reading > normal {
+			rv.R = 255
+		} else {
+			rv.B = 255
+		}
 	}
 	return
 }
@@ -62,8 +65,8 @@ func fillGradient(img *image.NRGBA, room room, reading float64) {
 	tx := ifZero(room.Therm.X, room.Rect.X+(room.Rect.W/2))
 	ty := ifZero(room.Therm.Y, room.Rect.Y+(room.Rect.H/2))
 
-	for i := 0; i < room.Rect.W; i++ {
-		for j := 0; j < room.Rect.H; j++ {
+	for i := 0; i <= room.Rect.W; i++ {
+		for j := 0; j <= room.Rect.H; j++ {
 			px, py := room.Rect.X+i, room.Rect.Y+j
 			xd, yd := float64(px-tx), float64(py-ty)
 			distance := math.Sqrt(xd*xd + yd*yd)
@@ -72,7 +75,11 @@ func fillGradient(img *image.NRGBA, room room, reading float64) {
 				relevance = 0
 			}
 
-			img.Set(px, py, getFillColor(room, reading, relevance))
+			if distance < conf.MaxRelevantDistance {
+				img.Set(px, py, getFillColor(room, reading, relevance))
+			} else {
+				img.Set(px, py, color.White)
+			}
 		}
 	}
 }
@@ -82,12 +89,12 @@ func houseServer(w http.ResponseWriter, req *http.Request) {
 
 	i := image.NewNRGBA(houseBase.Bounds())
 
-	// draw.Draw(i, houseBase.Bounds(), houseBase, image.Pt(0, 0), draw.Over)
+	draw.Draw(i, houseBase.Bounds(), houseBase, image.Pt(0, 0), draw.Over)
 
 	for _, roomName := range conf.Colorize {
 		room := conf.Rooms[roomName]
 		drawBox(i, room)
-		fillGradient(i, room, 22.0)
+		fillGradient(i, room, 15.79)
 	}
 
 	png.Encode(w, i)
