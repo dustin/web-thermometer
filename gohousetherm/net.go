@@ -9,54 +9,26 @@ import (
 	"time"
 )
 
-type reading struct {
-	when    time.Time
-	sensor  string
-	reading float64
-}
-
 var timeInFormat string = "2006/01/02 15:04:05"
 var timeOutFormat string = "2006-01-02T15:04:05"
 
-func (r reading) TS() string {
-	return r.when.Format(timeOutFormat)
-}
-
-type readings struct {
-	current  map[string]reading
-	previous map[string]*ring.Ring
-
-	input chan reading
-	req   chan chan response
-}
-
 var readingsSingleton readings
 
-type response map[string][]reading
-
-func newReadings() (rv readings) {
-	rv.current = make(map[string]reading)
-	rv.previous = make(map[string]*ring.Ring)
-	rv.input = make(chan reading, 1000)
-	rv.req = make(chan chan response)
-	return
-}
-
-func (rs *readings) processReadings() {
+func processReadings() {
 	for {
 		select {
-		case r := <-rs.input:
-			rs.current[r.sensor] = r
-			rng := rs.previous[r.sensor]
+		case r := <-readingsSingleton.input:
+			readingsSingleton.current[r.sensor] = r
+			rng := readingsSingleton.previous[r.sensor]
 			if rng == nil {
 				rng = ring.New(100)
 			}
 			rng = rng.Prev()
 			rng.Value = r
-			rs.previous[r.sensor] = rng
-		case r := <-rs.req:
+			readingsSingleton.previous[r.sensor] = rng
+		case r := <-readingsSingleton.req:
 			response := make(map[string][]reading)
-			for k, v := range rs.previous {
+			for k, v := range readingsSingleton.previous {
 				stuff := []reading{}
 				v.Do(func(x interface{}) {
 					if x != nil {
@@ -68,12 +40,6 @@ func (rs *readings) processReadings() {
 			r <- response
 		}
 	}
-}
-
-func (rs *readings) getReadings() response {
-	ch := make(chan response)
-	rs.req <- ch
-	return <-ch
 }
 
 func read(s *net.UDPConn, ch chan reading) {
@@ -119,7 +85,7 @@ func readNet() error {
 		return err
 	}
 
-	go readingsSingleton.processReadings()
+	go processReadings()
 
 	go read(socket, readingsSingleton.input)
 	return nil
