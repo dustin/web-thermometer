@@ -8,4 +8,4 @@ stack.
 This project consists of tools that sit on a LAN along with my multicast
 collector and produces pictures like this one of my house:
 
-![My House](http://bleu.west.spy.net/therm/House "My House")
+![My House](http://bleu.west.spy.net/house/ "My House")
