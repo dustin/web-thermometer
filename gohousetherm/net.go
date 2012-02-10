@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/ring"
 	"log"
 	"net"
 	"strconv"
@@ -19,6 +20,68 @@ var timeOutFormat string = "2006-01-02T15:04:05"
 
 func (r reading) TS() string {
 	return r.when.Format(timeOutFormat)
+}
+
+type readings struct {
+	current  map[string]reading
+	previous map[string]*ring.Ring
+
+	input chan reading
+	req   chan chan response
+}
+
+var readingsSingleton readings
+
+type response map[string][]reading
+
+func newReadings() (rv readings) {
+	rv.current = make(map[string]reading)
+	rv.previous = make(map[string]*ring.Ring)
+	rv.input = make(chan reading, 1000)
+	rv.req = make(chan chan response)
+	return
+}
+
+func (rs *readings) processReadings() {
+	for {
+		select {
+		case r := <-rs.input:
+			log.Printf("processor read %#v", r)
+			rs.current[r.sensor] = r
+			rng := rs.previous[r.sensor]
+			if rng == nil {
+				rng = ring.New(100)
+			}
+			rng = rng.Prev()
+			rng.Value = r
+			rs.previous[r.sensor] = rng
+
+			rng.Do(func(x interface{}) {
+				if x != nil {
+					log.Printf("  have %v", x)
+				}
+			})
+		case r := <-rs.req:
+			log.Printf("Request for a dump.")
+			response := make(map[string][]reading)
+			for k, v := range rs.previous {
+				stuff := []reading{}
+				v.Do(func(x interface{}) {
+					if x != nil {
+						stuff = append(stuff, x.(reading))
+					}
+				})
+				response[k] = stuff
+			}
+			r <- response
+		}
+	}
+}
+
+func (rs *readings) getReadings() response {
+	ch := make(chan response)
+	rs.req <- ch
+	return <-ch
 }
 
 func read(s *net.UDPConn, ch chan reading) {
@@ -52,18 +115,20 @@ func read(s *net.UDPConn, ch chan reading) {
 	}
 }
 
-func readNet() (<-chan reading, error) {
+func readNet() error {
 	socket, err := net.ListenMulticastUDP("udp4",
 		nil, &net.UDPAddr{
 			IP:   net.IPv4(225, 0, 0, 37),
 			Port: 6789,
 		})
 
-	ch := make(chan reading, 1000)
+	readingsSingleton = newReadings()
 	if err != nil {
-		return ch, err
+		return err
 	}
 
-	go read(socket, ch)
-	return ch, nil
+	go readingsSingleton.processReadings()
+
+	go read(socket, readingsSingleton.input)
+	return nil
 }

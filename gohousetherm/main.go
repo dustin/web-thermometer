@@ -60,17 +60,11 @@ func main() {
 	houseBase = loadImage("house.png")
 	loadConfig()
 
-	ch, err := readNet()
+	err := readNet()
 	if err != nil {
 		log.Fatalf("Error reading the net:  %v", err)
 	}
 
 	addr := ":7777"
-	go serveWeb(addr)
-
-	log.Printf("Waiting for multicast thingies.")
-	for r := range ch {
-		log.Printf("Read %#v", r)
-		bySerial[r.sensor].latest = r.reading
-	}
+	serveWeb(addr)
 }

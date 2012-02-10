@@ -136,15 +136,18 @@ func houseServer(w http.ResponseWriter, req *http.Request) {
 
 	draw.Draw(i, houseBase.Bounds(), houseBase, image.Pt(0, 0), draw.Over)
 
+	alldata := readingsSingleton.getReadings()
+
 	for _, roomName := range conf.Colorize {
 		room := conf.Rooms[roomName]
 		drawBox(i, room)
-		reading := room.latest
-		if math.IsNaN(reading) {
-			drawLabel(i, room, "??.??")
-		} else {
+		something, ok := alldata[room.SN]
+		if ok {
+			reading := something[0].reading
 			fillGradient(i, room, reading)
 			drawLabel(i, room, fmt.Sprintf("%.2f", reading))
+		} else {
+			drawLabel(i, room, "??.??")
 		}
 	}
 
