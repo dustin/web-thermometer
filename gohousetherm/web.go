@@ -160,7 +160,7 @@ func drawSparklines(i *image.NRGBA, room *room, roomReadings []reading) {
 	}
 
 	for pos, r := range roomReadings {
-		x := len(roomReadings) - pos + sparkx
+		x := len(roomReadings) - pos + sparkx - 1
 		heightPercent := (r.reading - low) / (high - low)
 		y := int((float64(sparky) + float64(sparkh)) - (float64(sparkh) * heightPercent))
 		if y > sparky+sparkh {
