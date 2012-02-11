@@ -30,6 +30,10 @@ func (rs *readingServer) newReading(r reading) {
 	rng = rng.Prev()
 	rng.Value = r
 	rs.previous[r.sensor] = rng
+
+	for _, ch := range rs.registrations {
+		ch <- r
+	}
 }
 
 func (rs *readingServer) handleRequest(req request) {
@@ -85,4 +89,8 @@ func (rs *readingServer) getCurrent(which string) (reading, bool) {
 		return r[0], ok
 	}
 	return reading{}, false
+}
+
+func (rs *readingServer) register(ch chan<- reading) {
+	rs.registrations = append(rs.registrations, ch)
 }

@@ -70,6 +70,9 @@ type readingServer struct {
 	current  map[string]reading
 	previous map[string]*ring.Ring
 
-	input chan reading
-	req   chan request
+	registrations []chan<- reading
+
+	input      chan reading
+	req        chan request
+	registerch chan chan<- reading
 }

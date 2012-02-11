@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"image"
 	"log"
 	"math"
@@ -11,6 +12,8 @@ import (
 	_ "image/gif"
 	_ "image/png"
 )
+
+var couchURL = flag.String("couch", "", "URL of the CouchDB")
 
 var houseBase image.Image
 var thermImage image.Image
@@ -54,6 +57,8 @@ func loadConfig() {
 }
 
 func main() {
+	flag.Parse()
+
 	houseBase = loadImage("house.png")
 	thermImage = loadImage("therm-c.gif")
 	loadConfig()
@@ -61,6 +66,10 @@ func main() {
 	err := readNet()
 	if err != nil {
 		log.Fatalf("Error reading the net:  %v", err)
+	}
+
+	if *couchURL != "" {
+		readingsSingleton.register(couchLoop())
 	}
 
 	addr := ":7777"
