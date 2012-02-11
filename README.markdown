@@ -9,3 +9,7 @@ This project consists of tools that sit on a LAN along with my multicast
 collector and produces pictures like this one of my house:
 
 ![My House](http://bleu.west.spy.net/house/ "My House")
+
+It also makes individual thermometer pictures like this one from my
+living room:
+![living room](http://bleu.west.spy.net/therm/livingroom "living room")
