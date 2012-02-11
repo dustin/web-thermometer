@@ -61,10 +61,15 @@ func (r reading) TS() string {
 
 type response map[string][]reading
 
+type request struct {
+	history bool
+	ch      chan response
+}
+
 type readingServer struct {
 	current  map[string]reading
 	previous map[string]*ring.Ring
 
 	input chan reading
-	req   chan chan response
+	req   chan request
 }

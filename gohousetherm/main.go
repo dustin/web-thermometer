@@ -3,13 +3,17 @@ package main
 import (
 	"encoding/json"
 	"image"
-	"image/png"
 	"log"
 	"math"
 	"os"
+
+	// Yay side-effects
+	_ "image/gif"
+	_ "image/png"
 )
 
 var houseBase image.Image
+var thermImage image.Image
 
 var conf houseConfig
 var bySerial map[string]*room
@@ -20,7 +24,7 @@ func loadImage(name string) image.Image {
 		log.Fatal(err)
 	}
 	defer f.Close()
-	i, err := png.Decode(f)
+	i, _, err := image.Decode(f)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,6 +55,7 @@ func loadConfig() {
 
 func main() {
 	houseBase = loadImage("house.png")
+	thermImage = loadImage("therm-c.gif")
 	loadConfig()
 
 	err := readNet()

@@ -13,6 +13,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"code.google.com/p/draw2d/draw2d"
 	"code.google.com/p/freetype-go/freetype"
 	"code.google.com/p/freetype-go/freetype/truetype"
 )
@@ -201,8 +202,65 @@ func houseServer(w http.ResponseWriter, req *http.Request) {
 	png.Encode(w, i)
 }
 
+func drawTemp(i draw.Image, r reading) {
+	x1, y1 := float64(66), float64(65)
+
+	// Translate the angle because we're a little crooked
+	trans := -90.0
+
+	// Calculate the angle based on the temperature
+	angle := (r.reading * 1.8) + trans
+	// Calculate the angle in radians
+	rad := ((angle / 360.0) * 2.0 * 3.14159265358979)
+	// Find the extra points
+	x2 := math.Sin(rad) * 39.0
+	y2 := math.Cos(rad) * 39.0
+	// Negate the y, we're upside-down
+	y2 = -y2
+	// Move over to the starting points.
+	x2 += x1
+	y2 += y1
+
+	// Draw the line...
+	gc := draw2d.NewGraphicContext(i)
+	gc.MoveTo(x1, y1)
+	gc.LineTo(x2, y2)
+	gc.Stroke()
+
+	// And label it
+	c := freetype.NewContext()
+	c.SetDPI(72)
+	c.SetFont(font)
+	c.SetFontSize(10)
+	c.SetClip(i.Bounds())
+	c.SetDst(i)
+	c.SetSrc(image.Black)
+
+	pt := freetype.Pt(52, 72+c.FUnitToPixelRU(font.UnitsPerEm()))
+	c.DrawString(fmt.Sprintf("%.2f", r.reading), pt)
+
+}
+
+func thermServer(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "image/png")
+
+	i := image.NewRGBA(thermImage.Bounds())
+
+	draw.Draw(i, thermImage.Bounds(), thermImage, image.Pt(0, 0), draw.Over)
+
+	p := req.URL.Path[7:]
+	r, ok := readingsSingleton.getCurrent(p)
+
+	if ok {
+		drawTemp(i, r)
+	}
+
+	png.Encode(w, i)
+}
+
 func serveWeb(addr string) {
 	http.HandleFunc("/", houseServer)
+	http.HandleFunc("/therm/", thermServer)
 	log.Printf("Listening to web requests on %s", addr)
 	log.Fatal(http.ListenAndServe(addr, nil))
 }
