@@ -175,14 +175,12 @@ func drawSparklines(i *image.NRGBA, room *room, roomReadings []reading) {
 	}
 }
 
-func houseServer(w http.ResponseWriter, req *http.Request) {
-	w.Header().Set("Content-Type", "image/png")
-
+func drawHouse() image.Image {
 	i := image.NewNRGBA(houseBase.Bounds())
 
-	draw.Draw(i, houseBase.Bounds(), houseBase, image.Pt(0, 0), draw.Over)
-
 	alldata := readingsSingleton.getReadings()
+
+	draw.Draw(i, houseBase.Bounds(), houseBase, image.Pt(0, 0), draw.Over)
 
 	for _, roomName := range conf.Colorize {
 		room := conf.Rooms[roomName]
@@ -198,6 +196,14 @@ func houseServer(w http.ResponseWriter, req *http.Request) {
 			drawLabel(i, room, "??.??")
 		}
 	}
+
+	return i
+}
+
+func houseServer(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "image/png")
+
+	i := drawHouse()
 
 	png.Encode(w, i)
 }
