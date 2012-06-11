@@ -25,7 +25,7 @@ func (rs *readingServer) newReading(r reading) {
 	rs.current[r.sensor] = r
 	rng := rs.previous[r.sensor]
 	if rng == nil {
-		rng = ring.New(conf.BySerial[r.sensor].SparkWidth())
+		rng = ring.New(conf.BySerial(r.sensor).SparkWidth())
 	}
 	rng = rng.Prev()
 	rng.Value = r

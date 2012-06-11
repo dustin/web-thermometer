@@ -33,6 +33,8 @@ type Room struct {
 	}
 
 	Latest float64
+
+	Name string
 }
 
 // Width of a sparkline defined for this room.
@@ -51,8 +53,22 @@ type HouseConfig struct {
 	}
 	MaxRelevantDistance float64
 	Rooms               map[string]*Room
-	BySerial            map[string]*Room
+	bySerial            map[string]*Room
 	Colorize            []string
+}
+
+// Get the name for this Serial Number
+func (hc *HouseConfig) NameOf(sn string) string {
+	r := hc.BySerial(sn)
+	if r == nil {
+		return sn
+	}
+	return r.Name
+}
+
+// Get the room by serial number.
+func (hc *HouseConfig) BySerial(sn string) *Room {
+	return hc.bySerial[sn]
 }
 
 // Load config from a JSON file.
@@ -68,14 +84,15 @@ func LoadConfig(path string) (conf HouseConfig, err error) {
 		return
 	}
 
-	conf.BySerial = make(map[string]*Room)
+	conf.bySerial = make(map[string]*Room)
 	for k, r := range conf.Rooms {
 		sn := r.SN
 		if sn == "" {
 			sn = k
 		}
-		conf.BySerial[sn] = r
+		conf.bySerial[sn] = r
 		r.Latest = math.NaN()
+		r.Name = k
 	}
 	return
 }
