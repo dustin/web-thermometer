@@ -16,6 +16,8 @@ import (
 	"code.google.com/p/draw2d/draw2d"
 	"code.google.com/p/freetype-go/freetype"
 	"code.google.com/p/freetype-go/freetype/truetype"
+
+	"github.com/dustin/web-thermometer/gohousetherm/houseconf"
 )
 
 var font *truetype.Font
@@ -37,7 +39,7 @@ func init() {
 	}
 }
 
-func drawBox(i *image.NRGBA, room *room) {
+func drawBox(i *image.NRGBA, room *houseconf.Room) {
 	draw.Draw(i, image.Rect(room.Rect.X-1, room.Rect.Y-1,
 		room.Rect.X+room.Rect.W+1,
 		room.Rect.Y+room.Rect.H+1),
@@ -53,7 +55,7 @@ func ifZero(a, b int) int {
 	return a
 }
 
-func getFillColor(room *room, reading, relevance float64) (rv color.NRGBA) {
+func getFillColor(room *houseconf.Room, reading, relevance float64) (rv color.NRGBA) {
 	normal := room.Min + ((room.Max - room.Min) / 2.0)
 	maxDifference := room.Max - room.Min
 
@@ -77,7 +79,7 @@ func getFillColor(room *room, reading, relevance float64) (rv color.NRGBA) {
 	return
 }
 
-func fillGradient(img *image.NRGBA, room *room, reading float64) {
+func fillGradient(img *image.NRGBA, room *houseconf.Room, reading float64) {
 	tx := ifZero(room.Therm.X, room.Rect.X+(room.Rect.W/2))
 	ty := ifZero(room.Therm.Y, room.Rect.Y+(room.Rect.H/2))
 
@@ -96,7 +98,7 @@ func fillGradient(img *image.NRGBA, room *room, reading float64) {
 	}
 }
 
-func fillSolid(i *image.NRGBA, room *room, c color.Color) {
+func fillSolid(i *image.NRGBA, room *houseconf.Room, c color.Color) {
 	draw.Draw(i, image.Rect(room.Rect.X, room.Rect.Y,
 		room.Rect.X+room.Rect.W,
 		room.Rect.Y+room.Rect.H),
@@ -105,7 +107,7 @@ func fillSolid(i *image.NRGBA, room *room, c color.Color) {
 		draw.Over)
 }
 
-func fill(i *image.NRGBA, room *room, reading float64) {
+func fill(i *image.NRGBA, room *houseconf.Room, reading float64) {
 	switch {
 	case reading < room.Min:
 		fillSolid(i, room, color.NRGBA{0, 0, 255, 255})
@@ -116,7 +118,7 @@ func fill(i *image.NRGBA, room *room, reading float64) {
 	}
 }
 
-func drawLabel(i draw.Image, room *room, lbl string) {
+func drawLabel(i draw.Image, room *houseconf.Room, lbl string) {
 	charwidth := 6
 	charheight := 12
 
@@ -137,7 +139,7 @@ func drawLabel(i draw.Image, room *room, lbl string) {
 	c.DrawString(lbl, pt)
 }
 
-func drawSparklines(i *image.NRGBA, room *room, roomReadings []reading) {
+func drawSparklines(i *image.NRGBA, room *houseconf.Room, roomReadings []reading) {
 	// Not interested in plotting fewer than two points
 	if len(roomReadings) < 2 {
 		return
