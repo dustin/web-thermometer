@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"code.google.com/p/draw2d/draw2d"
 	"code.google.com/p/freetype-go/freetype"
@@ -204,6 +205,9 @@ func drawHouse() image.Image {
 
 func houseServer(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "image/png")
+	w.Header().Set("Cache-Control", "max-age=300")
+	w.Header().Set("Expires",
+		time.Now().Add(5*time.Minute).UTC().Format(http.TimeFormat))
 
 	i := drawHouse()
 
@@ -251,6 +255,9 @@ func drawTemp(i draw.Image, r reading) {
 
 func thermServer(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "image/png")
+	w.Header().Set("Cache-Control", "max-age=300")
+	w.Header().Set("Expires",
+		time.Now().Add(5*time.Minute).UTC().Format(http.TimeFormat))
 
 	i := image.NewRGBA(thermImage.Bounds())
 
