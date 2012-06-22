@@ -4,6 +4,8 @@ import (
 	"image"
 	"testing"
 	"time"
+
+	"github.com/dustin/web-thermometer/gohousetherm/houseconf"
 )
 
 func BenchmarkTherm(b *testing.B) {
@@ -28,7 +30,11 @@ func BenchmarkHouse(b *testing.B) {
 	houseBase = loadImage("house.png")
 	readingsSingleton = newReadingServer()
 	go processReadings()
-	loadConfig()
+	var err error
+	conf, err = houseconf.LoadConfig("houseconf/house.json")
+	if err != nil {
+		b.Fatalf("Error loading config: %v", err)
+	}
 
 	for k, r := range conf.Rooms {
 		name := r.SN
