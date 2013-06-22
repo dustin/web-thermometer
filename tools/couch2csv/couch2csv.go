@@ -116,7 +116,7 @@ func feedBody(r io.Reader) int64 {
 		cw.Write([]string{
 			thing.Doc.SN(),
 			fmt.Sprintf("%f", thing.Doc.Reading),
-			ts.UTC().Format(time.RFC3339),
+			ts.Format(time.RFC3339),
 		})
 
 		largest = thing.Seq
