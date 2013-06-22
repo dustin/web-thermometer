@@ -2,5 +2,6 @@
 *.[68]
 *~
 /gohousetherm/gohousetherm
+/tools/couch2csv/couch2csv
 /tools/serieslize/serieslize
 target
