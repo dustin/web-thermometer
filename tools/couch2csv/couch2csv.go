@@ -189,7 +189,7 @@ func main() {
 			"include_docs": true,
 			"timeout":      500,
 		})
-	if err != nil {
+	if err != nil && err != io.EOF {
 		log.Printf("Error changesing: %v", err)
 	}
 	log.Printf("Largest seen was %v", largest)
