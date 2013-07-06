@@ -75,7 +75,9 @@ func flush(a []interface{}) []interface{} {
 	for _, r := range res {
 		if !r.Ok {
 			log.Printf("Error on %v: %v/%v", r.Id, r.Error, r.Reason)
-			broken[r.Id] = true
+			if r.Error != "conflict" {
+				broken[r.Id] = true
+			}
 		}
 
 	}
