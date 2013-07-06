@@ -3,5 +3,6 @@
 *~
 /gohousetherm/gohousetherm
 /tools/couch2csv/couch2csv
+/tools/csv2couch/csv2couch
 /tools/serieslize/serieslize
 target
