@@ -142,7 +142,7 @@ func main() {
 
 		select {
 		case <-report:
-			log.Printf("Processed %v since %v",
+			log.Printf("Processed %v in %v",
 				humanize.Comma(int64(read)), time.Since(start))
 		default:
 		}
