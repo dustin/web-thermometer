@@ -133,11 +133,19 @@ func main() {
 	wg.Add(1)
 	go storer()
 
+	report := time.Tick(time.Minute)
 	start := time.Now()
 	read := 0
 	for rec, err := cr.Read(); err == nil; rec, err = cr.Read() {
 		enqueue(rec)
 		read++
+
+		select {
+		case <-report:
+			log.Printf("Processed %v since %v",
+				humanize.Comma(int64(read)), time.Since(start))
+		default:
+		}
 	}
 	close(ch)
 	wg.Done()
