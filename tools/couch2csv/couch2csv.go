@@ -15,7 +15,7 @@ import (
 	"strings"
 	"time"
 
-	"code.google.com/p/dsallings-couch-go"
+	"github.com/dustin/go-couch"
 )
 
 var largest int64

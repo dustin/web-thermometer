@@ -6,7 +6,7 @@ import (
 	"log"
 	"reflect"
 
-	couch "code.google.com/p/dsallings-couch-go"
+	couch "github.com/dustin/go-couch"
 )
 
 func (r reading) MarshalJSON() ([]byte, error) {

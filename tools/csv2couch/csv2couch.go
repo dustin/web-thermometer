@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"code.google.com/p/dsallings-couch-go"
+	"github.com/dustin/go-couch"
 	"github.com/dustin/go-humanize"
 )
 
